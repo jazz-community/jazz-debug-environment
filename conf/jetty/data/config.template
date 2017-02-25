@@ -1,0 +1,4 @@
+osgi.bundles.defaultStartLevel=4
+osgi.install.area=sdk
+osgi.framework=sdk/plugins/org.eclipse.osgi_3.6.50.R36x_v20120315-1500.jar
+osgi.configuration.cascaded=false
