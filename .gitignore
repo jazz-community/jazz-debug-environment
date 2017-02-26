@@ -1,9 +1,4 @@
 # content ignored due to licensing if its content 
-sdk/*
-jre/*
-
-db/*
-database_presets/*
 workspace
 conf/jetty/gen
 derby.log
