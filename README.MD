@@ -15,11 +15,12 @@ Installation
 -------------------------------
  1. Click the 'Clone or download' button on GitHub, then do one of the following:
   - Download & extract the ZIP file to your desired location
- - Copy the clone URL, navigate to the desired location on your machine and use `git clone <clone URL>` to get this repos content
+  - Copy the clone URL, navigate to the desired location on your machine and use `git clone <clone URL>` to get this repos content
  4. Extract the RTC Server SDK into the 'sdk' folder.
  5. Extract/Copy the IBM JRE into the 'jre' folder.
  6. Extract one of the database presets which are available within the 'db_presets' folder into the 'db' folder
  7. Verify that your folder structure looks like the following:
+
 > - conf
 > - db_presets
 > --- .......
@@ -38,10 +39,13 @@ Installation
 
 Start the Server
 -------------------------------
- If you have changed your configuration, or running this for the first time, do the following:
- - run the 'generate_jetty_config.ps1' script which can be found in the 'conf/jetty' folder
- 
-Start the server by running 'run_jetty.ps1'
+
+ - If you have changed your configuration, or running this for the first time, do the following:
+	 - run the `generate_jetty_config.ps1` script which can be found in the 'conf/jetty' folder
+ - Start the server by running `run_jetty.ps1`
+ - Open [https://localhost:7443/jazz](https://localhost:7443/jazz)
+
+
 
 Upgrade Debug Environment
 -------------------------------
