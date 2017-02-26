@@ -35,3 +35,32 @@ You can basically follow Ralph Schoons Extension Workshop written for 6.0.3
  - Import 10 Free Devloper Licenses
  - Shutdown
  - 
+ 
+#### Copy Database
+
+
+#### Create sdk_files.cfg
+Navigate to the following folder (whereas `${workspace_loc}` is the folder of your Eclipse workspace)
+
+    ${workspace_loc}\.metadata\.plugins\org.eclipse.pde.core\[RTCExt] Jetty RTC Server\org.eclipse.equinox.simpleconfigurator
+
+Within this folder, grab the file named `bundles.info` and copy it to `conf/jetty/user_configs/`. Open the file in Notepad++ (or any other editor which supports regular expressions).
+Use the Find/Replace feature in Notepad++:
+
+ - Find: `.*(\/plugins\/)(.*(.jar|\/)).*`
+ - Replace: `$2@start`
+ - Set 'Search Mode' to 'Regular Expression' and do NOT tick 'matches newline'
+ - Apply using 'Replace All'
+ - Verify results (see example below)
+ - Rename to `sdk_files.cfg` (will overwrite the one which was created for a previous jazz version)
+
+**Example before Find/Replace**
+
+>com.hp.hpl.jena.rdf,2.7.2000.v20160630_1732,file:/C:/RTC603Dev/installs/rtc-server-sdk/plugins/com.hp.hpl.jena.rdf_2.7.2000.v20160630_1732/,4,true
+>com.ibm.icu,52.1.1.v201501240615,file:/C:/RTC603Dev/installs/rtc-server-sdk/plugins/com.ibm.icu_52.1.1.v201501240615.jar,4,true
+
+**Example after Find/Replace**
+
+> com.hp.hpl.jena.rdf_2.7.2000.v20160630_1732/@start
+> com.ibm.icu_52.1.1.v201501240615.jar@start
+
