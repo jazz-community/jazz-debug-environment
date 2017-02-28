@@ -21,21 +21,24 @@ Installation
  6. Extract one of the database presets which are available within the 'db_presets' folder into the 'db' folder
  7. Verify that your folder structure looks like the following:
 
-> - conf
-> - db_presets
-> --- .......
-> - db
-> --- conf
-> - jre
-> --- bin
-> --- docs
-> --- lib
-> --- properties
-> --- ........
-> - sdk
-> --- features
-> --- license
-> --- plugins
+```
+├── jazz-debug-environment/
+│   ├── conf/
+│   ├── db_presets/
+│   │   ├── ....
+│   ├── db/
+│   │   ├── conf/
+│   ├── jre/
+│   │   ├── bin/
+│   │   ├── docs/
+│   │   ├── lib/
+│   │   ├── properties/
+│   │   ├── ....
+│   ├── sdk/
+│   │   ├── features/
+│   │   ├── license/
+│   │   ├── plugins/
+```
 
 Start the Server
 -------------------------------
@@ -46,6 +49,18 @@ Start the Server
  - Open [https://localhost:7443/jazz](https://localhost:7443/jazz)
 
 
+Hints
+-------------------------------
+### Execute ps1 files on double-click
+The con of using ps1 files is that they can't be executed automatically on double click by default. So if you want to make ps1 files behave in the same way as conventional command files, modify the following registry key:
+
+> HKEY_CLASSES_ROOT\Microsoft.PowerShellScript.1\Shell\open\command
+
+change the default value to the following:
+
+> "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -noLogo -ExecutionPolicy unrestricted -file "%1"
+
+[Source](http://stackoverflow.com/a/20623597)
 
 Upgrade Debug Environment
 -------------------------------
