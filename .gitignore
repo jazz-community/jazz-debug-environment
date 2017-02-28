@@ -1,3 +1,4 @@
 # content ignored due to licensing if its content 
 workspace
 derby.log
+conf/jetty/gen/**/*
