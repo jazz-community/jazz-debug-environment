@@ -51,7 +51,7 @@ function mergeProperties($tempFile) {
     # write template to output
     Get-Content data/dev.template >> $tempFile
 
-    $files = Get-ChildItem user_configs/ -Filter *.properties
+    $files = @(Get-ChildItem user_configs/ -Filter *.properties)
 
     foreach ($file in $files) {
         $content = Get-Content user_configs/$file
@@ -81,4 +81,4 @@ encode $outFile $tempFile
 encode $devProps $tempProps
 
 
-Read-Host -Prompt "Press Enter to exit"
+Read-Host -Prompt "Configuration generated successfully. Press Enter to Exit"
