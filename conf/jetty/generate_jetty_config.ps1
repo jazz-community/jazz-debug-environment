@@ -57,8 +57,10 @@ function mergeProperties($tempFile) {
     foreach ($file in $files) {
         $content = Get-Content user_configs/$file
 
-        if (![String]::IsNullOrEmpty($content) -and !$content.StartsWith("#")) {
-            echo $content >> $tempFile
+        foreach ($line in $content) {
+            if (![String]::IsNullOrEmpty($line) -and !$line.StartsWith("#")) {
+                echo $line >> $tempFile
+            }
         }
     }
 }
