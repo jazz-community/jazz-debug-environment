@@ -26,11 +26,12 @@ function createConfig($tempFile) {
 
     # these files need to be added to the osgi bundles variable in
     # the config.ini file.
-    $userConfigs = @("sdk_files.cfg", "user_workspaces.cfg")
+    $userConfigs = Get-ChildItem "user_configs\*.cfg"
+
     $osgiOutput = "osgi.bundles="
 
     foreach ($configFile in $userConfigs) {
-        $content = Get-Content user_configs/$configFile
+        $content = Get-Content $configFile
         $osgiOutput += formatJars $content
     }
 
