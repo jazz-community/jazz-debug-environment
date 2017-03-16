@@ -1,18 +1,18 @@
 
 Jazz Debug Environment
-===================
+======================
 
 The goal of this project is to provide you with a ready-to-go environment for extending your jazz applications.
 
 [TOC]
 
 Prerequisites
--------------------------------
+-------------
  - Rational Team Concert Server SDK, download from [Jazz.net](https://jazz.net/downloads/rational-team-concert/) (make sure that you choose the right version)
  - IBM JRE (Java Runtime Environment by IBM)
 
 Installation
--------------------------------
+------------
  1. Click the 'Clone or download' button on GitHub, then do one of the following:
   - Download & extract the ZIP file to your desired location
   - Copy the clone URL, navigate to the desired location on your machine and use `git clone <clone URL>` to get this repos content
@@ -41,7 +41,7 @@ Installation
 ```
 
 Start the Server
--------------------------------
+----------------
 
  - If you have changed your configuration, or running this for the first time, do the following:
 	 - run the `generate_jetty_config.ps1` script which can be found in the 'conf/jetty' folder
@@ -50,7 +50,7 @@ Start the Server
 
 
 Hints
--------------------------------
+-----
 ### Execute ps1 files on double-click
 The con of using ps1 files is that they can't be executed automatically on double click by default. So if you want to make ps1 files behave in the same way as conventional command files, modify the following registry key:
 
@@ -63,7 +63,7 @@ change the default value to the following:
 [Source](http://stackoverflow.com/a/20623597)
 
 Upgrade Debug Environment
--------------------------------
+-------------------------
 We will try to release a new version of the Debug Environment as soon as possible, so that you can only pull the latest changes from GitHub. If you cannot wait or if you would like to contribute to our project by providing it with an upgrade package, follow the instructions below...
 
 ### Prepare your own package
@@ -120,3 +120,32 @@ Use the Find/Replace feature in Notepad++:
 > com.hp.hpl.jena.rdf_2.7.2000.v20160630_1732/@start
 > com.ibm.icu_52.1.1.v201501240615.jar@start
 
+Using the scripts for IntelliJ (Community Edition) launch configurations
+------------------------------------------------------------------------
+
+This project comes with batch files intended for debugging the jetty launch configuration as a remote server from within IntelliJ community edition. This section explains how to use the provided files for setting up debug launch configurations that automatically launch and attach to an instance of jetty.
+
+If you are using the Ultimate Edition of IntelliJ, you can just setup a standard jetty launch configuration and don't need to rely on any of the files mentioned in this section.
+
+#### Setup debug configuration
+
+ 1. Open 'Run -> Edit Configurations'
+ 2. Press '+' and select 'Remote'
+ 3. Choose a name for your debug configuration
+ 4. Select 'Single instance only'
+ 5. Set the port to 9999
+
+In the next steps, we will set up the provided scripts to launch jetty and ensure that only one instance is running at any given time.
+
+ 6. Add before launch
+[[https://github.com/innerjoin/jazz-debug-environment/screenshots/add_before_launch.png]]
+ 7. Select 'Run external tool' from the drop down
+ 8. Create a new tool by pressing '+'
+ 9. Call this external tool 'Run Jetty'. This will be used to launch a new instance of jetty from the repository.
+ 10. Adjust the settings according to the screenshot. **Make sure to adjust the path to point to your repository location**
+[[https://github.com/innerjoin/jazz-debug-environment/screenshots/start_jetty_config.png]]
+ 11. Create another external tool, this time calling it 'Stop Jetty'. This will be used to kill any running debugging instance of jazz running in jetty. As before, mimic the settings in the screenshot. **Make sure to adjust the path to point to your repository location**
+[[https://github.com/innerjoin/jazz-debug-environment/screenshots/stop_jetty_config.png]]
+ 12. Confirm that your setup resembles the screenshot. Make sure that the 'Stop Jetty' tool runs before the 'Run Jetty' tool. This can be adjusted with the arrows above the list view.
+[[https://github.com/innerjoin/jazz-debug-environment/screenshots/completed_debug_configuration.png]]
+ 13. To run jetty from IntelliJ, click 'Run -> Debug... -> <Name of your debug configuration>'
