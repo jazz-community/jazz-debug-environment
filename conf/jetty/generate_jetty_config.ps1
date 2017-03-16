@@ -62,8 +62,12 @@ function mergeProperties($tempFile) {
     }
 }
 
-# remove previous files
-rm -r gen/*
+# remove previous files or create folder
+if (Test-Path gen) {
+    rm -r gen/*
+} else {
+    New-Item gen -type directory >$null 2>&1
+}
 
 # create empty files
 $tempFile = New-Item gen/config.temp -type file
@@ -82,3 +86,4 @@ encode $devProps $tempProps
 
 
 Read-Host -Prompt "Configuration generated successfully. Press Enter to Exit"
+
