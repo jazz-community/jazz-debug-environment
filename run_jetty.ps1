@@ -1,6 +1,3 @@
-"Starting the Jazz Debug Environment... (this will likely take a couple of minutes, depending on your machine)"
-"Navigate to 'https://localhost:7443/jazz' to access the application"
-
 & "jre\bin\java.exe" `
 -Xdebug "-agentlib:jdwp=transport=dt_socket,address=9999,server=y,suspend=n" `
 -Xmx512M `
@@ -34,5 +31,3 @@
 -classpath sdk\plugins\org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar org.eclipse.equinox.launcher.Main `
 -dev "file:conf/jetty/gen/dev.properties" `
 -configuration "file:conf/jetty/gen"
-
-Read-Host -Prompt "For some reason, the jazz debug session did not start properly. Carefully read the entries above (if there are any) and consult the logs. Press Enter to Close this Window"
