@@ -45,7 +45,8 @@ Start the Server
 	 - run the `generate_jetty_config.ps1` script which can be found in the 'conf/jetty' folder
  - Start the server by running `click_launch.ps1`
  - Open [https://localhost:7443/jazz](https://localhost:7443/jazz)
-
+ - Start debuggin your applications
+![Example service debugging](https://github.com/jazz-community/jazz-debug-environment/blob/master/screenshots/debugging-services.png)
 
 Hints
 -----
