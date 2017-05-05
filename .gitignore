@@ -2,3 +2,5 @@
 workspace
 derby.log
 conf/jetty/gen/**/*
+
+my_clean.ps1
