@@ -46,7 +46,7 @@ Start the Server
  - Start the server by running `click_launch.ps1`
  - Open [https://localhost:7443/jazz](https://localhost:7443/jazz)
  - Start debuggin your applications
-![Example service debugging](https://github.com/jazz-community/jazz-debug-environment/blob/master/screenshots/debugging-services.png)
+![Example service debugging](https://github.com/jazz-community/jazz-debug-environment/blob/master/docs/images/debugging-services.png)
 
 Hints
 -----
@@ -83,16 +83,16 @@ If you are using the Ultimate Edition of IntelliJ, you can just setup a standard
 In the next steps, we will set up the provided scripts to launch jetty and ensure that only one instance is running at any given time.
 
  6. Add before launch
-![alt tag](https://github.com/jazz-community/jazz-debug-environment/blob/master/screenshots/add_before_launch.png)
+![alt tag](https://github.com/jazz-community/jazz-debug-environment/blob/master/docs/images/add_before_launch.png)
  7. Select 'Run external tool' from the drop down
  8. Create a new tool by pressing '+'
  9. Call this external tool 'Run Jetty'. This will be used to launch a new instance of jetty from the repository.
  10. Adjust the settings according to the screenshot. **Make sure to adjust the path to point to your repository location**
-![alt tag](https://github.com/jazz-community/jazz-debug-environment/blob/master/screenshots/start_jetty_config.png)
+![alt tag](https://github.com/jazz-community/jazz-debug-environment/blob/master/docs/images/start_jetty_config.png)
  11. Create another external tool, this time calling it 'Stop Jetty'. This will be used to kill any running debugging instance of jazz running in jetty. As before, mimic the settings in the screenshot. **Make sure to adjust the path to point to your repository location**
-![alt tag](https://github.com/jazz-community/jazz-debug-environment/blob/master/screenshots/stop_jetty_config.png)
+![alt tag](https://github.com/jazz-community/jazz-debug-environment/blob/master/docs/images/stop_jetty_config.png)
  12. Confirm that your setup resembles the screenshot. Make sure that the 'Stop Jetty' tool runs before the 'Run Jetty' tool. This can be adjusted with the arrows above the list view.
-![alt tag](https://github.com/jazz-community/jazz-debug-environment/blob/master/screenshots/completed_debug_configuration.png)
+![alt tag](https://github.com/jazz-community/jazz-debug-environment/blob/master/docs/images/completed_debug_configuration.png)
  13. To run jetty from IntelliJ, click 'Run -> Debug... -> <Name of your debug configuration>'
 
 Contributing
