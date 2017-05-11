@@ -33,6 +33,9 @@ The goal of this project is to provide you with a ready-to-go environment for ex
 │   │   ├── plugins/
 ```
 
+## Check out correct branch
+The master branch is meant for working with Windows. For working with bash under Linux, check out the linux branch `git checkout linux`.
+
 ## Start the Server
  - If you have changed your configuration, or are running this for the first time, do the following:
     * Windows: run the `generate_jetty_config.ps1` script which can be found in the `conf/jetty` folder
