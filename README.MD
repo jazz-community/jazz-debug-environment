@@ -1,16 +1,14 @@
-
 # Jazz Debug Environment
-
 The goal of this project is to provide you with a ready-to-go environment for extending your jazz applications.
 
 ## Prerequisites
  - Rational Team Concert Server SDK, download from [Jazz.net](https://jazz.net/downloads/rational-team-concert/) (make sure that you choose the right version)
- - IBM JRE (Java Runtime Environment by IBM)
+ - IBM JRE (Java Runtime Environment by IBM). Can be extracted from a download that contains the JTS (eg. JTS-CCM-keys). Downloads can also be found on [Jazz.net](https://jazz.net/downloads/rational-team-concert/).
 
 ## Installation
  1. Click the 'Clone or download' button on GitHub, then do one of the following:
-  - Download & extract the ZIP file to your desired location
-  - Copy the clone URL, navigate to the desired location on your machine and use `git clone https://github.com/jazz-community/jazz-debug-environment.git` to get this repos content
+    - Download & extract the ZIP file to your desired location
+    - Copy the clone URL, navigate to the desired location on your machine and use `git clone https://github.com/jazz-community/jazz-debug-environment.git` to get this repos content
  2. Extract the RTC Server SDK into the 'sdk' folder.
  3. Extract/Copy the IBM JRE into the 'jre' folder.
  4. Extract one of the database presets which are available within the 'db_presets' folder into the 'db' folder
@@ -36,10 +34,13 @@ The goal of this project is to provide you with a ready-to-go environment for ex
 ```
 
 ## Start the Server
- - If you have changed your configuration, or running this for the first time, do the following:
-	 - run the `generate_jetty_config.ps1` script which can be found in the 'conf/jetty' folder
- - Start the server by running `click_launch.ps1`
- - Open [https://localhost:7443/jazz](https://localhost:7443/jazz)
+ - If you have changed your configuration, or are running this for the first time, do the following:
+    * Windows: run the `generate_jetty_config.ps1` script which can be found in the `conf/jetty` folder
+    * Linux: run the `generate_jetty_config.sh` script in the `conf/jetty`
+ - Start the server 
+    * Windows: by double-clicking `click_launch.ps1` or running `run_jetty.ps1`
+    * Linux: by running `run_jetty.sh`
+ - Open [https://localhost:7443/jazz](https://localhost:7443/jazz) in a browser of your choice
  - Start debugging your Jazz extensions
 
 ![Example service debugging](https://github.com/jazz-community/jazz-debug-environment/blob/master/docs/images/debugging-services.png)
