@@ -1,5 +1,5 @@
 & "jre\bin\java.exe" `
--Xdebug "-agentlib:jdwp=transport=dt_socket,address=9999,server=y,suspend=n" `
+-Xdebug "-agentlib:jdwp=transport=dt_socket,address=127.0.0.1:9999,server=y,suspend=n" `
 -Xmx512M `
 -XX:PermSize=64M `
 -XX:MaxPermSize=256M `
