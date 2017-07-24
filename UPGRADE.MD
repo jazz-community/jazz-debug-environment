@@ -1,5 +1,4 @@
-Upgrade Debug Environment
--------------------------
+# Upgrade Debug Environment
 This Guide describes on how to create a Debug Environment for a new Release of Jazz. 
 If you just wish to use the Debug Environment, read our main [README](https://github.com/jazz-community/jazz-debug-environment/blob/master/README.MD)
 
@@ -57,3 +56,4 @@ com.ibm.icu,52.1.1.v201501240615,file:/C:/RTC603Dev/installs/rtc-server-sdk/plug
 com.hp.hpl.jena.rdf_2.7.2000.v20160630_1732/@start
 com.ibm.icu_52.1.1.v201501240615.jar@start
 ```
+

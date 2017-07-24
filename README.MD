@@ -1,23 +1,18 @@
-
-Jazz Debug Environment
-======================
-
+# Jazz Debug Environment
 The goal of this project is to provide you with a ready-to-go environment for extending your jazz applications.
 
-Prerequisites
--------------
+## Prerequisites
  - Rational Team Concert Server SDK, download from [Jazz.net](https://jazz.net/downloads/rational-team-concert/) (make sure that you choose the right version)
- - IBM JRE (Java Runtime Environment by IBM)
+ - IBM JRE (Java Runtime Environment by IBM). Can be extracted from a download that contains the JTS (eg. JTS-CCM-keys). Downloads can also be found on [Jazz.net](https://jazz.net/downloads/rational-team-concert/).
 
-Installation
-------------
+## Installation
  1. Click the 'Clone or download' button on GitHub, then do one of the following:
-  - Download & extract the ZIP file to your desired location
-  - Copy the clone URL, navigate to the desired location on your machine and use `git clone https://github.com/jazz-community/jazz-debug-environment.git` to get this repos content
- 4. Extract the RTC Server SDK into the 'sdk' folder.
- 5. Extract/Copy the IBM JRE into the 'jre' folder.
- 6. Extract one of the database presets which are available within the 'db_presets' folder into the 'db' folder
- 7. Verify that your folder structure looks like the following:
+    - Download & extract the ZIP file to your desired location
+    - Copy the clone URL, navigate to the desired location on your machine and use `git clone https://github.com/jazz-community/jazz-debug-environment.git` to get this repos content
+ 2. Extract the RTC Server SDK into the 'sdk' folder.
+ 3. Extract/Copy the IBM JRE into the 'jre' folder.
+ 4. Extract one of the database presets which are available within the 'db_presets' folder into the 'db' folder
+ 5. Verify that your folder structure looks like the following:
 
 ```
 ├── jazz-debug-environment/
@@ -38,18 +33,22 @@ Installation
 │   │   ├── plugins/
 ```
 
-Start the Server
-----------------
+## Check out correct branch
+The master branch is meant for working with Windows. For working with bash under Linux, check out the linux branch `git checkout linux`.
 
- - If you have changed your configuration, or running this for the first time, do the following:
-	 - run the `generate_jetty_config.ps1` script which can be found in the 'conf/jetty' folder
- - Start the server by running `click_launch.ps1`
- - Open [https://localhost:7443/jazz](https://localhost:7443/jazz)
- - Start debuggin your applications
+## Start the Server
+ - If you have changed your configuration, or are running this for the first time, do the following:
+    * Windows: run the `generate_jetty_config.ps1` script which can be found in the `conf/jetty` folder
+    * Linux: run the `generate_jetty_config.sh` script in the `conf/jetty`
+ - Start the server 
+    * Windows: by double-clicking `click_launch.ps1` or running `run_jetty.ps1`
+    * Linux: by running `run_jetty.sh`
+ - Open [https://localhost:7443/jazz](https://localhost:7443/jazz) in a browser of your choice
+ - Start debugging your Jazz extensions
+
 ![Example service debugging](https://github.com/jazz-community/jazz-debug-environment/blob/master/docs/images/debugging-services.png)
 
-Hints
------
+## Hints
 ### Execute ps1 files on double-click
 The con of using ps1 files is that they can't be executed automatically on double click by default. So if you want to make ps1 files behave in the same way as conventional command files, modify the following registry key:
 
@@ -61,13 +60,10 @@ change the default value to the following:
 
 [Source](http://stackoverflow.com/a/20623597)
 
-Upgrade Debug Environment
--------------------------
+## Upgrade Debug Environment
 We will try to release a new version of the Debug Environment as soon as possible, so that you can only pull the latest changes from GitHub. If you cannot wait or if you would like to contribute to our project by providing it with an upgrade package, head over to the [Upgrade Guide](https://github.com/jazz-community/jazz-debug-environment/blob/master/UPGRADE.MD)
 
-Using the scripts for IntelliJ (Community Edition) launch configurations
-------------------------------------------------------------------------
-
+## Using the scripts for IntelliJ (Community Edition)
 This project comes with batch files intended for debugging the jetty launch configuration as a remote server from within IntelliJ community edition. This section explains how to use the provided files for setting up debug launch configurations that automatically launch and attach to an instance of jetty.
 
 If you are using the Ultimate Edition of IntelliJ, you can just setup a standard jetty launch configuration and don't need to rely on any of the files mentioned in this section.
@@ -95,12 +91,10 @@ In the next steps, we will set up the provided scripts to launch jetty and ensur
 ![alt tag](https://github.com/jazz-community/jazz-debug-environment/blob/master/docs/images/completed_debug_configuration.png)
  13. To run jetty from IntelliJ, click 'Run -> Debug... -> <Name of your debug configuration>'
 
-Contributing
-------------
+## Contributing
 Please use the [Issue Tracker](https://github.com/jazz-community/jazz-debug-environment/issues) of this repository to report issues or suggest enhancements.<br>
 Pull requests are very welcome.
 
-Licensing
----------
+## Licensing
 Copyright (c) Siemens AG. All rights reserved.<br>
 Licensed under the [MIT](https://github.com/jazz-community/jazz-debug-environment/blob/master/LICENSE) License.
