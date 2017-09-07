@@ -59,9 +59,9 @@ Create the following folder structure:
 --------- **repositoryDB**
 ```
 
-Parallel to your eclipse workspace, there is another folder named **<your eclipse workspace>-testDB**. Copy it's contents over into the above created **repositoryDB** folder.
+Parallel to your eclipse workspace, there is another folder named **\<your eclipse workspace\>-testDB**. Copy it's contents over into the above created **repositoryDB** folder.
 
-Create a ZIP file out of the above created **conf** folder and name it **<RTC Version>_db.zip** (e.g. 604_db.zip) and create a pull request on GitHub if you want to share this DB preset with the community.
+Create a ZIP file out of the above created **conf** folder and name it **\<RTC Version\>_db.zip** (e.g. 604_db.zip) and create a pull request on GitHub if you want to share this DB preset with the community.
 
 #### Create sdk_files.cfg
 Navigate to the following folder (whereas `${workspace_loc}` is the folder of your Eclipse workspace)
