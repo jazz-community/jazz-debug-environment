@@ -24,26 +24,27 @@ The following instruction are a compact excerpt of [Ralph Schoon's Extension Wor
 
 - Extract all Downloads on your local machine
 - In the extracted folder containing the feature based launches (e.g. launcher442\plugins) locate the JAR file named *com.ibm.team.dev.launch_0.3.13.201605301342.jar* (or similar). Copy it into the RTC Eclipse Client dropins folder. Create a folder named **dropins** if it does not exist.
-- Start **eclipse.exe** from inside the RTC Client Eclipse package
+- Start **eclipse.exe** from inside the RTC Client Eclipse package. During start, define a workspace folder if not already set.
 - Target Platform Setup:
-    - From the menu bar, select **Window > Preferences**. In the Preferences dialog, select **Plug-in Development > Target Platform**. Wait for the load process to finish, then click **Add...**
+    - From the RTC Eclipse Client menu bar, select **Window > Preferences**. In the Preferences dialog, select **Plug-in Development > Target Platform**. Wait for the load process to finish, then click **Add...**
     - In the New Target Definition wizard, select **Nothing: Start with an empty target definition** and then click **Next**.
     - On the second page of the wizard, enter **RTC Server SDK** as the Name and click **Add...**
     - In the Add Content wizard, select **Installation** and then click **Next**
     - On the second page of the wizard, set the path to the downloaded and extracted *RTC Server SDK* as the **Location** and then click **Finish**
     - After the operation completes, click **Finish** in the New Target Definition wizard
-    - Back on the Preferences dialog, **select the new Target Definition** and then click **OK**
+    - Back on the Preferences dialog, select the new **RTC Server SDK Target Definition** and then click **OK**
 - Database Creation:
     - From the menu bar, select **File > Import…** and then in the Import wizard, select **Plug-in Development > Plug-ins and Fragments** and then click **Next**
     - Make sure that **Import From** is set to **Target Definition** and **RTC Server SDK** is selected for it. Set **Import as** to **Project with source folders**. Then click **Next**
     - Enter **com.ibm.team.common.tests.utils** into the ID field and select the plug-in matching that ID (Click **Add ->**). Click **Finish**.
+    - In the top right corner of Eclipse, switch to the **Plug-in Development** perspective
     - Select **Run Configurations…** from the drop down menu of the Run toolbar icon
-    - On the Run Configurations dialog, select **JUnit2 Launch > [RTCExt] Create RTC Test Database** and then click **Run**
+    - On the Run Configurations dialog, select **JUnit2 Launch > [Standard] Create Test Database** and then click **Run**
     - This may take a while to run. The *Console* view will appear and show quite a bit of output. The *JUnit* view will also be active. When the database creation is complete, the *JUnit* view will show success. Note that the Console view will show some exceptions. Be patient, this takes a good while and unless the launch is terminated, let it keep running. **The important thing is that the JUnit view shows success. If it fails, retry again and again until it succeeds**
 - Run local Jazz server:
     - Navigate again to **Run Configurations…**. This time, choose **[RTCExt] Jetty RTC Server** and click **Run** to start a local development server. 
     - The **Console** will print a lot of info and error messages. Just ignore them
-    - Open a web browser and navigate to **https://localhost:744 3/jazz/admin**. Type **ADMIN** as user ID and **ADMIN** as password as soon as the login screen appears.
+    - Open a web browser and navigate to **https://localhost:7443/jazz/admin**. Type **ADMIN** as user ID and **ADMIN** as password as soon as the login screen appears.
     - Deploy Predefined Process Templates
     - Import the 10 Free Developer Licenses you've initially downloaded
     - Shutdown the local server by closing Eclipse
