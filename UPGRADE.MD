@@ -42,20 +42,31 @@ The following instruction are a compact excerpt of [Ralph Schoon's Extension Wor
     - On the Run Configurations dialog, select **JUnit2 Launch > [Standard] Create Test Database** and then click **Run**
     - This may take a while to run. The *Console* view will appear and show quite a bit of output. The *JUnit* view will also be active. When the database creation is complete, the *JUnit* view will show success. Note that the Console view will show some exceptions. Be patient, this takes a good while and unless the launch is terminated, let it keep running. **The important thing is that the JUnit view shows success. If it fails, retry again and again until it succeeds**
 - Run local Jazz server:
-    - Navigate again to **Run Configurations…**. This time, choose **[RTCExt] Jetty RTC Server** and click **Run** to start a local development server. 
+    - Navigate again to **Run Configurations…**. This time, choose **[JSA Standard] Jetty (Standalone)** and click **Run** to start a local development server. 
     - The **Console** will print a lot of info and error messages. Just ignore them
-    - Open a web browser and navigate to **https://localhost:7443/jazz/admin**. Type **ADMIN** as user ID and **ADMIN** as password as soon as the login screen appears.
-    - Deploy Predefined Process Templates
-    - Import the 10 Free Developer Licenses you've initially downloaded
+    - Open a web browser and navigate to **https://localhost:9443/jazz/admin**. Type **ADMIN** as user ID and **ADMIN** as password as soon as the login screen appears.
+    - Deploy Predefined Process Templates. Navigate to **Templates** and click on **Deploy Predefined Templates**.
+    - Import the 10 Free Developer Licenses you've initially downloaded. Navigate to **Server > License Key Management** and click **Add...** in the *Client Access License Types* grid. Upload the License ZIP file and work through the installation wizzard.
     - Shutdown the local server by closing Eclipse
  
 #### Copy Database
-Copy generated database and create a ZIP file out of it.
+Create the following folder structure:
+```
+-- conf
+---- jazz
+------- indices
+------- derby
+--------- **repositoryDB**
+```
+
+Parallel to your eclipse workspace, there is another folder named **<your eclipse workspace>-testDB**. Copy it's contents over into the above created **repositoryDB** folder.
+
+Create a ZIP file out of the above created **conf** folder and name it **<RTC Version>_db.zip** (e.g. 604_db.zip) and create a pull request on GitHub if you want to share this DB preset with the community.
 
 #### Create sdk_files.cfg
 Navigate to the following folder (whereas `${workspace_loc}` is the folder of your Eclipse workspace)
 
-    ${workspace_loc}\.metadata\.plugins\org.eclipse.pde.core\[RTCExt] Jetty RTC Server\org.eclipse.equinox.simpleconfigurator
+    ${workspace_loc}\.metadata\.plugins\org.eclipse.pde.core\[JSA Standard] Jetty (Standalone)\org.eclipse.equinox.simpleconfigurator
 
 Within this folder, grab the file named `bundles.info` and copy it to `conf/jetty/user_configs/`. Open the file in Notepad++ (or any other editor which supports regular expressions).
 Use the Find/Replace feature in Notepad++:
