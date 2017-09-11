@@ -32,6 +32,13 @@ The goal of this project is to provide you with a ready-to-go environment for ex
 │   │   ├── license/
 │   │   ├── plugins/
 ```
+## Configure Extensions for Debugging
+In order to be able to debug your extensions, modify the `my_workspaces.cfg`, stored within `conf\jetty\user_configs` to contain your extensions. The file content could look like the following (whereas lines starting with a **`#`** are ignored):
+```
+C\:/myWork/com.siemens.bt.jazz.ui.WorkItemBulkMover@start
+D\:/myOtherWork/com.siemens.bt.jazz.rtc.workitemeditor.presentation.statushistory@start
+# C\:/somewhere-else/rtc-create-child-item-plugin@start
+```
 
 ## Check out correct branch
 The master branch is meant for working with Windows. For working with bash under Linux, check out the linux branch `git checkout linux`.
@@ -44,6 +51,7 @@ The master branch is meant for working with Windows. For working with bash under
     * Windows: by double-clicking `click_launch.ps1` or running `run_jetty.ps1`
     * Linux: by running `run_jetty.sh`
  - Open [https://localhost:7443/jazz](https://localhost:7443/jazz) in a browser of your choice
+ - When prompted for credentials, type **ADMIN** as your User ID and use the same (**ADMIN**) as password
  - Start debugging your Jazz extensions
 
 ![Example service debugging](https://github.com/jazz-community/jazz-debug-environment/blob/master/docs/images/debugging-services.png)
