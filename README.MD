@@ -1,6 +1,9 @@
 # Jazz Debug Environment
 The goal of this project is to provide you with a ready-to-go environment for extending your jazz applications.
 
+## Limitations
+Please note that this approach currently **works only for RTC 6.0.3**. See [GitHub Issue](https://github.com/jazz-community/jazz-debug-environment/issues/4) and [jazz.net Enhancement](https://jazz.net/jazz/web/projects/Rational%20Team%20Concert#action=com.ibm.team.workitem.viewWorkItem&id=438754) for more information.
+
 ## Prerequisites
  - Rational Team Concert Server SDK, download from [Jazz.net](https://jazz.net/downloads/rational-team-concert/) (make sure that you choose the right version)
  - IBM JRE (Java Runtime Environment by IBM). Can be extracted from a download that contains the JTS (eg. JTS-CCM-keys). Downloads can also be found on [Jazz.net](https://jazz.net/downloads/rational-team-concert/).
