@@ -65,12 +65,32 @@ function mergeProperties($tempFile) {
     }
 }
 
+function listSdkPlugins() {
+    $pluginPath = "../../sdk/plugins"
+
+    ls -Directory -Name $pluginPath | % {
+        if ($_ -notlike "*.source_*") {
+            echo $_"/@start"
+        }
+    } > user_configs/sdk_files.cfg
+
+    ls -File -Name $pluginPath | % {
+        if ($_ -notlike "*.source_*") {
+            echo $_"@start"
+        }
+    } >> user_configs/sdk_files.cfg
+
+}
+
 # remove previous files or create folder
 if (Test-Path gen) {
     rm -r gen/*
 } else {
     New-Item gen -type directory >$null 2>&1
 }
+
+# generate sdk_files.cfg from current sdk
+listSdkPlugins
 
 # create empty files
 $tempFile = New-Item gen/config.temp -type file
