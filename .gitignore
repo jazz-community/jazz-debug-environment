@@ -5,3 +5,6 @@ conf/jetty/gen/**/*
 conf/jetty/p2
 
 my_clean.ps1
+
+# gradle
+.gradle/
