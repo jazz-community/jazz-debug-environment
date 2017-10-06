@@ -1,0 +1,8 @@
+import org.gradle.internal.os.OperatingSystem;
+
+task detect {
+    doLast {
+        println(OperatingSystem.current().isLinux())
+        println(OperatingSystem.current().isWindows())
+    }
+}
