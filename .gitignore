@@ -1,8 +1,8 @@
 # content ignored due to licensing if its content 
 workspace
 derby.log
-conf/jetty/gen/**/*
-conf/jetty/p2
+conf/jetty/gen/
+conf/jetty/p2/
 
 my_clean.ps1
 
