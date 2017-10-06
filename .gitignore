@@ -8,3 +8,7 @@ my_clean.ps1
 
 # gradle
 .gradle/
+
+# idea
+.idea/
+*.iml
