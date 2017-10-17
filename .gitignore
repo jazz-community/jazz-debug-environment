@@ -12,3 +12,5 @@ my_clean.ps1
 # idea
 .idea/
 *.iml
+
+*.swp
