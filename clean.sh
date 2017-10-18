@@ -3,4 +3,4 @@
 rm -rf workspace/
 rm -rf conf/jetty/gen/org*
 rm -rf conf/jetty/gen/com*
-rm derby.log
+rm -f derby.log
