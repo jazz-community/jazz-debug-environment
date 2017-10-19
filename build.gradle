@@ -48,5 +48,38 @@ task run(type: Exec) {
 
     if (OperatingSystem.current().isLinux()) {
     }
+}
 
+// sadly, this is incredibly slow. Maybe the only option for this is actually calling
+// an external task to unzip. Seriously uncool.
+task unzip(type: Copy) {
+    outputs.upToDateWhen {false}
+    // how to unzip a file
+    def zipFile = file('sdk/RTC-SDK-Server-6.0.3.zip')
+    def outDir = file('unziptest/')
+
+    from zipTree(zipFile)
+    into outDir
+}
+
+task init {
+    doLast {
+        // how to get files in a dir
+        def zips = []
+        fileTree(dir: 'sdk', include: '*.zip').visit {
+            FileVisitDetails details ->
+                zips << details.file.name
+        }
+
+        println zips
+
+        // how to work with custom properties from the command line
+        if (project.hasProperty('sdk')) {
+            println sdk
+        }
+
+        if (project.hasProperty('rtc')) {
+            println rtc
+        }
+    }
 }
