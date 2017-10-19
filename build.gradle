@@ -9,42 +9,30 @@ task detect {
     }
 }
 
-task cleanup {
-    doLast {
-        if (OperatingSystem.current().isWindows()) {
-            exec {
-                commandLine 'powershell.exe', './clean.ps1'
-            }
-        }
+task cleanup(type: Exec) {
+    if (OperatingSystem.current().isWindows()) {
+        commandLine 'powershell.exe', './clean.ps1'
+    }
 
-        if (OperatingSystem.current().isLinux()) {
-            exec {
-                commandLine './clean.sh'
-            }
-        }
+    if (OperatingSystem.current().isLinux()) {
+        commandLine './clean.sh'
     }
 }
 
-task generate {
-    doLast {
-        if (OperatingSystem.current().isWindows()) {
-            exec {
-                workingDir 'conf/jetty'
-                commandLine 'powershell.exe', './generate_jetty_config.ps1'
-            }
-        }
+task generate(type: Exec) {
+    if (OperatingSystem.current().isWindows()) {
+        workingDir 'conf/jetty'
+        commandLine 'powershell.exe', './generate_jetty_config.ps1'
+    }
 
-        if (OperatingSystem.current().isLinux()) {
-            exec {
-                workingDir './conf/jetty'
-                commandLine './generate_jetty_config.sh'
-                ignoreExitValue true
-            }
-        }
+    if (OperatingSystem.current().isLinux()) {
+        workingDir './conf/jetty'
+        commandLine './generate_jetty_config.sh'
+        ignoreExitValue true
     }
 }
 
-task run2(type: Exec) {
+task run(type: Exec) {
     if (OperatingSystem.current().isWindows()) {
         workingDir './'
         commandLine 'cmd', '/K', 'start', 'powershell','./run_jetty.ps1'
