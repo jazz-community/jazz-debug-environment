@@ -1,6 +1,6 @@
-import org.gradle.internal.os.OperatingSystem;
-
 apply plugin: 'java'
+
+import org.gradle.internal.os.OperatingSystem;
 
 task detect {
     doLast {
@@ -44,185 +44,13 @@ task generate {
     }
 }
 
-task jetty2(type: JavaExec) {
-//    commandLine = "& \"jre\\bin\\java.exe\" " +
-//            "\"-Dcom.ibm.team.fulltext.indexLocation=db/conf/jazz/indices/workitemindex\" " +
-//            "\"-Dcom.ibm.team.jfs.index.root.directory=db/conf/jazz/indices\" " +
-//            "\"-Dcom.ibm.team.repository.db.jdbc.location=db/conf/jazz/derby/repositoryDB\" " +
-//            "\"-Dcom.ibm.team.repository.discovery.document.location=file:conf/jazz/services.xml\" " +
-//            "\"-Dcom.ibm.team.repository.scr.document.location=file:conf/jazz/scr.xml\" " +
-//            "\"-Dcom.ibm.team.repository.server.mode=STANDALONE\" " +
-//            "\"-Dcom.ibm.team.repository.server.webapp.url=https://localhost:7443/jazz\" " +
-//            "\"-Dcom.ibm.team.repository.web.helpuri=http://publib.boulder.ibm.com/infocenter/clmhelp/v4r0/index.jsp\" " +
-//            "\"-Dcom.ibm.team.repository.web.homeuri=http://www.jazz.net\" " +
-//            "\"-Dcom.ibm.team.repository.ws.allow.identity.assertion=false\" " +
-//            "\"-Dcom.ibm.team.scm.enable.distributed=true\" " +
-//            "\"-Dcom.ibm.team.server.configURL=file:conf/jazz/teamserver.properties\" " +
-//            "\"-Dcom.siemens.bt.jazz.services.cqrest.cqrooturi=https://bt-clearquest.hqs.sbt.siemens.com/cqweb/oslc/\" " +
-//            "\"-Declipse.ignoreApp=false\" " +
-//            "\"-Dfile.encoding=UTF-8\" " +
-//            "\"-Dfile.encoding=windows-1252\" " +
-//            "\"-Djetty.http.port=7080\" " +
-//            "\"-Djetty.https.port=7443\" " +
-//            "\"-Dlog4j.configuration=file:conf/jazz/log4j.properties\" " +
-//            "\"-Dorg.eclipse.emf.ecore.plugin.EcorePlugin.doNotLoadResourcesPlugin=true\" " +
-//            "\"-Dorg.eclipse.equinox.servlet.bridge.enabled=true\" " +
-//            "\"-Dorg.mortbay.log.LogFactory.noDiscovery=true\" " +
-//            "\"-Dorg.osgi.framework.bootdelegation=sun.*,com.ms.*,com.ibm.*,com.sun.*,org.w3c.*,org.xml.*,javax.*\" " +
-//            "\"-Dosgi.compatibility.bootdelegation=false\" " +
-//            "\"-Dosgi.noShutdown=true\" " +
-//            "\"-XX:MaxPermSize=256M\" " +
-//            "\"-XX:PermSize=64M\" " +
-//            "-Xdebug " +
-//            "-agentlib:jdwp=transport=dt_socket,address=127.0.0.1:9999,server=y,suspend=n " +
-//            "\"-Xmx512M\" " +
-//            "-classpath sdk\\plugins\\org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar org.eclipse.equinox.launcher.Main " +
-//            "-configuration file:conf/jetty/gen -" +
-//            "dev file:conf/jetty/gen/dev.properties"
-}
-
-// task jetty(type: JavaExec) {
-//     classpath = files('sdk\\plugins\\org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar')
-//     main = 'org.eclipse.equinox.launcher.Main'
-//     executable = "jre\\bin\\java.exe"
-//     workingDir = "."
-//     systemProperties = [
-//             "com.ibm.team.fulltext.indexLocation": "db/conf/jazz/indices/workitemindex",
-//             "com.ibm.team.jfs.index.root.directory": "db/conf/jazz/indices",
-//             "com.ibm.team.repository.db.jdbc.location": "db/conf/jazz/derby/repositoryDB",
-//             "com.ibm.team.repository.discovery.document.location": "file:conf/jazz/services.xml",
-//             "com.ibm.team.repository.scr.document.location": "file:conf/jazz/scr.xml",
-//             "com.ibm.team.repository.server.mode": "STANDALONE",
-//             "com.ibm.team.repository.server.webapp.url": "https://localhost:7443/jazz",
-//             "com.ibm.team.repository.web.helpuri": "http://publib.boulder.ibm.com/infocenter/clmhelp/v4r0/index.jsp",
-//             "com.ibm.team.repository.web.homeuri": "http://www.jazz.net",
-//             "com.ibm.team.repository.ws.allow.identity.assertion": "false",
-//             "com.ibm.team.scm.enable.distributed": "true",
-//             "com.ibm.team.server.configURL": "file:conf/jazz/teamserver.properties",
-//             "com.siemens.bt.jazz.services.cqrest.cqrooturi": "https://bt-clearquest.hqs.sbt.siemens.com/cqweb/oslc/",
-//             "eclipse.ignoreApp": "false",
-//             "file.encoding": "UTF-8",
-//             "jetty.http.port": "7080",
-//             "jetty.https.port": "7443",
-//             "log4j.configuration": "file:conf/jazz/log4j.properties",
-//             "org.eclipse.emf.ecore.plugin.EcorePlugin.doNotLoadResourcesPlugin": "true",
-//             "org.eclipse.equinox.servlet.bridge.enabled": "true",
-//             "org.mortbay.log.LogFactory.noDiscovery": "true",
-//             "org.osgi.framework.bootdelegation": "sun.*,com.ms.*,com.ibm.*,com.sun.*,org.w3c.*,org.xml.*,javax.*",
-//             "osgi.compatibility.bootdelegation": "false",
-//             "osgi.noShutdown": "true",
-//     ]
-//     allJvmArgs = [
-//             "agentlib:jdwp=transport=dt_socket,address=127.0.0.1:9999,server=y,suspend=n"
-//     ]
-//     jvmArgs = [
-// //            "XX:MaxPermSize=256M",
-// //            "XX:PermSize=64M",
-// //            "Xdebug",
-// //            "Xmx512M",
-//     ]
-//     args = [
-//             "-Xdebug",
-//             "-agentlib:jdwp=transport=dt_socket,address=127.0.0.1:9999,server=y,suspend=n",
-//             "-configuration file:conf/jetty/gen",
-//             "-dev file:conf/jetty/gen/dev.properties",
-//     ]
-// //    jvmArgs(value: '-XX:MaxPermSize=256M -XX:PermSize=64M -Xdebug -Xmx512M -agentlib:jdwp=transport=dt_socket,address=127.0.0.1:9999,server=y,suspend=n')
-// }
-
-task run {
-    // add a check if generate has been run
-    doLast {
-        if (OperatingSystem.current().isWindows()) {
-            exec {
-                // instead of calling powershell, start java directly
-//                commandLine 'powershell.exe', '& "jre\\bin\\java.exe" -Xdebug "-agentlib:jdwp=transport=dt_socket,address=127.0.0.1:9999,server=y,suspend=n" -Xmx512M -XX:PermSize=64M -XX:MaxPermSize=256M "-Dlog4j.configuration=file:conf/jazz/log4j.properties" "-Dcom.ibm.team.repository.web.homeuri=http://www.jazz.net" -"Dcom.ibm.team.repository.web.helpuri=http://publib.boulder.ibm.com/infocenter/clmhelp/v4r0/index.jsp" "-Dcom.ibm.team.repository.discovery.document.location=file:conf/jazz/services.xml" "-Dcom.ibm.team.repository.scr.document.location=file:conf/jazz/scr.xml" "-Dcom.ibm.team.repository.ws.allow.identity.assertion=false" "-Dorg.mortbay.log.LogFactory.noDiscovery=true" "-Dorg.eclipse.equinox.servlet.bridge.enabled=true" "-Dorg.eclipse.emf.ecore.plugin.EcorePlugin.doNotLoadResourcesPlugin=true" "-Declipse.ignoreApp=false" "-Dosgi.noShutdown=true" "-Dosgi.compatibility.bootdelegation=false" "-Dorg.osgi.framework.bootdelegation=sun.*,com.ms.*,com.ibm.*,com.sun.*,org.w3c.*,org.xml.*,javax.*" "-Dcom.ibm.team.server.configURL=file:conf/jazz/teamserver.properties" "-Dcom.ibm.team.repository.server.webapp.url=https://localhost:7443/jazz" "-Dcom.ibm.team.scm.enable.distributed=true" "-Dcom.ibm.team.repository.server.mode=STANDALONE" "-Dcom.ibm.team.repository.db.jdbc.location=db/conf/jazz/derby/repositoryDB" "-Dcom.ibm.team.jfs.index.root.directory=db/conf/jazz/indices" "-Dcom.ibm.team.fulltext.indexLocation=db/conf/jazz/indices/workitemindex" "-Djetty.http.port=7080" "-Djetty.https.port=7443" "-Duser.language=en" "-Dcom.siemens.bt.jazz.services.cqrest.cqrooturi=https://bt-clearquest.hqs.sbt.siemens.com/cqweb/oslc/" "-Dfile.encoding=UTF-8" -classpath sdk\\plugins\\org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar org.eclipse.equinox.launcher.Main -dev "file:conf/jetty/gen/dev.properties" -configuration "file:conf/jetty/gen"'
-//                commandLine 'powershell.exe', './jre/bin/java' +
-////                        ' -version'
-//                        " \"-Xdebug -agentlib:jdwp=transport=dt_socket,address=9999,server=y,suspend=n\"" +
-//                        " \"-Xmx512M\"" +
-//                        " \"-XX:PermSize=64M\"" +
-//                        " \"-XX:MaxPermSize=256M\"" +
-//                        " \"-Dlog4j.configuration=file:conf/jazz/log4j.properties\"" +
-//                        " \"-Dcom.ibm.team.repository.web.homeuri=http://www.jazz.net\"" +
-//                        " \"-Dcom.ibm.team.repository.web.helpuri=http://publib.boulder.ibm.com/infocenter/clmhelp/v4r0/index.jsp\"" +
-//                        " \"-Dcom.ibm.team.repository.discovery.document.location=file:conf/jazz/services.xml\"" +
-//                        " \"-Dcom.ibm.team.repository.scr.document.location=file:conf/jazz/scr.xml\"" +
-//                        " \"-Dcom.ibm.team.repository.ws.allow.identity.assertion=false\"" +
-//                        " \"-Dorg.mortbay.log.LogFactory.noDiscovery=true\"" +
-//                        " \"-Dorg.eclipse.equinox.servlet.bridge.enabled=true\"" +
-//                        " \"-Dorg.eclipse.emf.ecore.plugin.EcorePlugin.doNotLoadResourcesPlugin=true\"" +
-//                        " \"-Declipse.ignoreApp=false\"" +
-//                        " \"-Dosgi.noShutdown=true\"" +
-//                        " \"-Dosgi.compatibility.bootdelegation=false\"" +
-//                        " \"-Dorg.osgi.framework.bootdelegation=sun.*,com.ms.*,com.ibm.*,com.sun.*,org.w3c.*,org.xml.*,javax.*\"" +
-//                        " \"-Dcom.ibm.team.server.configURL=file:conf/jazz/teamserver.properties\"" +
-//                        " \"-Dcom.ibm.team.repository.server.webapp.url=https://localhost:7443/jazz\"" +
-//                        " \"-Dcom.ibm.team.scm.enable.distributed=true\"" +
-//                        " \"-Dcom.ibm.team.repository.server.mode=STANDALONE\"" +
-//                        " \"-Dcom.ibm.team.repository.db.jdbc.location=db/conf/jazz/derby/repositoryDB\"" +
-//                        " \"-Dcom.ibm.team.jfs.index.root.directory=db/conf/jazz/indices\"" +
-//                        " \"-Dcom.ibm.team.fulltext.indexLocation=db/conf/jazz/indices/workitemindex\"" +
-//                        " \"-Djetty.http.port=7080\"" +
-//                        " \"-Djetty.https.port=7443\"" +
-//                        " \"-Duser.language=en\"" +
-//                        " \"-Dcom.siemens.bt.jazz.services.cqrest.cqrooturi=https://bt-clearquest.hqs.sbt.siemens.com/cqweb/oslc/\"" +
-//                        " \"-Dfile.encoding=UTF-8\"" +
-//                        " \"-classpath sdk/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar org.eclipse.equinox.launcher.Main\"" +
-//                        " \"-dev file:conf/jetty/gen/dev.properties\"" +
-//                        " \"-configuration file:conf/jetty/gen\""
-
-                commandLine 'cmd', '/C', 'start', 'powershell','run_jetty.ps1'
-
-                // this doesn't work, but I have no idea why.
-                workingDir './'
-                ignoreExitValue true
-                //commandLine 'cmd.exe', '/c', 'jre\\bin\\java.exe "-Xdebug" "-agentlib:jdwp=transport=dt_socket,address=127.0.0.1:9999,server=y,suspend=n" "-Xmx512M" "-XX:PermSize=64M" "-XX:MaxPermSize=256M" "-Dlog4j.configuration=file:conf/jazz/log4j.properties" "-Dcom.ibm.team.repository.web.homeuri=http://www.jazz.net" "-Dcom.ibm.team.repository.web.helpuri=http://publib.boulder.ibm.com/infocenter/clmhelp/v4r0/index.jsp" "-Dcom.ibm.team.repository.discovery.document.location=file:conf/jazz/services.xml" "-Dcom.ibm.team.repository.scr.document.location=file:conf/jazz/scr.xml" "-Dcom.ibm.team.repository.ws.allow.identity.assertion=false" "-Dorg.mortbay.log.LogFactory.noDiscovery=true" "-Dorg.eclipse.equinox.servlet.bridge.enabled=true" "-Dorg.eclipse.emf.ecore.plugin.EcorePlugin.doNotLoadResourcesPlugin=true" "-Declipse.ignoreApp=false" "-Dosgi.noShutdown=true" "-Dosgi.compatibility.bootdelegation=false" "-Dorg.osgi.framework.bootdelegation=sun.*,com.ms.*,com.ibm.*,com.sun.*,org.w3c.*,org.xml.*,javax.*" "-Dcom.ibm.team.server.configURL=file:conf/jazz/teamserver.properties" "-Dcom.ibm.team.repository.server.webapp.url=https://localhost:7443/jazz" "-Dcom.ibm.team.scm.enable.distributed=true" "-Dcom.ibm.team.repository.server.mode=STANDALONE" "-Dcom.ibm.team.repository.db.jdbc.location=db/conf/jazz/derby/repositoryDB" "-Dcom.ibm.team.jfs.index.root.directory=db/conf/jazz/indices" "-Dcom.ibm.team.fulltext.indexLocation=db/conf/jazz/indices/workitemindex" "-Djetty.http.port=7080" "-Djetty.https.port=7443" "-Duser.language=en" "-Dcom.siemens.bt.jazz.services.cqrest.cqrooturi=https://bt-clearquest.hqs.sbt.siemens.com/cqweb/oslc/" "-Dfile.encoding=UTF-8" -classpath sdk\\plugins\\org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar org.eclipse.equinox.launcher.Main -dev file:conf/jetty/gen/dev.properties -configuration file:conf/jetty/gen'
-
-                // try just starting the server from here as a java process
-            }
-        }
-
-        if (OperatingSystem.current().isLinux()) {
-            exec {
-                ignoreExitValue true
-                commandLine './run_jetty.sh'
-                errorOutput System.out
-//                commandLine './jre/bin/java' +
-//                        ' -version'
-//                        " -Xdebug -agentlib:jdwp=transport=dt_socket,address=9999,server=y,suspend=n" +
-//                        " -Xmx512M" +
-//                        " -XX:PermSize=64M" +
-//                        " -XX:MaxPermSize=256M" +
-//                        " -Dlog4j.configuration=file:conf/jazz/log4j.properties" +
-//                        " -Dcom.ibm.team.repository.web.homeuri=http://www.jazz.net" +
-//                        " -Dcom.ibm.team.repository.web.helpuri=http://publib.boulder.ibm.com/infocenter/clmhelp/v4r0/index.jsp" +
-//                        " -Dcom.ibm.team.repository.discovery.document.location=file:conf/jazz/services.xml" +
-//                        " -Dcom.ibm.team.repository.scr.document.location=file:conf/jazz/scr.xml" +
-//                        " -Dcom.ibm.team.repository.ws.allow.identity.assertion=false" +
-//                        " -Dorg.mortbay.log.LogFactory.noDiscovery=true" +
-//                        " -Dorg.eclipse.equinox.servlet.bridge.enabled=true" +
-//                        " -Dorg.eclipse.emf.ecore.plugin.EcorePlugin.doNotLoadResourcesPlugin=true" +
-//                        " -Declipse.ignoreApp=false" +
-//                        " -Dosgi.noShutdown=true" +
-//                        " -Dosgi.compatibility.bootdelegation=false" +
-//                        " -Dorg.osgi.framework.bootdelegation=sun.*,com.ms.*,com.ibm.*,com.sun.*,org.w3c.*,org.xml.*,javax.*" +
-//                        " -Dcom.ibm.team.server.configURL=file:conf/jazz/teamserver.properties" +
-//                        " -Dcom.ibm.team.repository.server.webapp.url=https://localhost:7443/jazz" +
-//                        " -Dcom.ibm.team.scm.enable.distributed=true" +
-//                        " -Dcom.ibm.team.repository.server.mode=STANDALONE" +
-//                        " -Dcom.ibm.team.repository.db.jdbc.location=db/conf/jazz/derby/repositoryDB" +
-//                        " -Dcom.ibm.team.jfs.index.root.directory=db/conf/jazz/indices" +
-//                        " -Dcom.ibm.team.fulltext.indexLocation=db/conf/jazz/indices/workitemindex" +
-//                        " -Djetty.http.port=7080" +
-//                        " -Djetty.https.port=7443" +
-//                        " -Duser.language=en" +
-//                        " -Dcom.siemens.bt.jazz.services.cqrest.cqrooturi=https://bt-clearquest.hqs.sbt.siemens.com/cqweb/oslc/" +
-//                        " -Dfile.encoding=UTF-8" +
-//                        " -classpath sdk/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar org.eclipse.equinox.launcher.Main" +
-//                        " -dev file:conf/jetty/gen/dev.properties" +
-//                        " -configuration file:conf/jetty/gen"
-            }
-        }
+task run2(type: Exec) {
+    if (OperatingSystem.current().isWindows()) {
+        workingDir './'
+        commandLine 'cmd', '/K', 'start', 'powershell','./run_jetty.ps1'
     }
+
+    if (OperatingSystem.current().isLinux()) {
+    }
+
 }
