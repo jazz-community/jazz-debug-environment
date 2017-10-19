@@ -8,7 +8,7 @@ conf/jetty/p2/
 # again later
 conf/jetty/user_configs/sdk_files.cfg
 
-my_clean.ps1
+scripts/my_*
 
 # gradle
 .gradle/

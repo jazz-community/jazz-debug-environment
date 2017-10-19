@@ -13,10 +13,12 @@ task cleanup(type: Exec) {
     group "Jetty"
     description "Delete generated and runtime files"
     if (OperatingSystem.current().isWindows()) {
-        commandLine 'powershell.exe', './clean.ps1'
+        workingDir './'
+        commandLine 'powershell.exe', './scripts/clean.ps1'
     }
 
     if (OperatingSystem.current().isLinux()) {
+        workingDir './'
         commandLine './clean.sh'
     }
 }
@@ -26,7 +28,7 @@ task generate(type: Exec) {
     description "Create jazz and equinox configuration files"
     if (OperatingSystem.current().isWindows()) {
         workingDir 'conf/jetty'
-        commandLine 'powershell.exe', './generate_jetty_config.ps1'
+        commandLine 'powershell.exe', '../../scripts/generate_jetty_config.ps1'
     }
 
     if (OperatingSystem.current().isLinux()) {
@@ -41,7 +43,7 @@ task run(type: Exec) {
     description "Start jazz server"
     if (OperatingSystem.current().isWindows()) {
         workingDir './'
-        commandLine 'cmd', '/K', 'start', 'powershell','./run_jetty.ps1'
+        commandLine 'cmd', '/K', 'start', 'powershell','./scripts/run_jetty.ps1'
     }
 
     if (OperatingSystem.current().isLinux()) {
