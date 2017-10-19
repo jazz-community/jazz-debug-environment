@@ -106,7 +106,3 @@ mergeProperties $tempProps
 # java processes will not be able to read them as configs.
 encode $outFile $tempFile
 encode $devProps $tempProps
-
-
-Read-Host -Prompt "Configuration generated successfully. Press Enter to Exit"
-

@@ -1,8 +1,44 @@
+apply plugin: 'java'
+
 import org.gradle.internal.os.OperatingSystem;
 
 task detect {
     doLast {
-        println(OperatingSystem.current().isLinux())
-        println(OperatingSystem.current().isWindows())
+        println("Linux: " + OperatingSystem.current().isLinux())
+        println("Windows: " + OperatingSystem.current().isWindows())
     }
+}
+
+task cleanup(type: Exec) {
+    if (OperatingSystem.current().isWindows()) {
+        commandLine 'powershell.exe', './clean.ps1'
+    }
+
+    if (OperatingSystem.current().isLinux()) {
+        commandLine './clean.sh'
+    }
+}
+
+task generate(type: Exec) {
+    if (OperatingSystem.current().isWindows()) {
+        workingDir 'conf/jetty'
+        commandLine 'powershell.exe', './generate_jetty_config.ps1'
+    }
+
+    if (OperatingSystem.current().isLinux()) {
+        workingDir './conf/jetty'
+        commandLine './generate_jetty_config.sh'
+        ignoreExitValue true
+    }
+}
+
+task run(type: Exec) {
+    if (OperatingSystem.current().isWindows()) {
+        workingDir './'
+        commandLine 'cmd', '/K', 'start', 'powershell','./run_jetty.ps1'
+    }
+
+    if (OperatingSystem.current().isLinux()) {
+    }
+
 }
