@@ -50,36 +50,21 @@ task run(type: Exec) {
     }
 }
 
-// sadly, this is incredibly slow. Maybe the only option for this is actually calling
-// an external task to unzip. Seriously uncool.
-task unzip(type: Copy) {
-    outputs.upToDateWhen {false}
-    // how to unzip a file
-    def zipFile = file('sdk/RTC-SDK-Server-6.0.3.zip')
-    def outDir = file('unziptest/')
+// remember: https://stackoverflow.com/a/19256949/1969804 for dynamic lookup and stuff.
+task unzip {
+    group "Jetty"
+    description "Unzip sdk and server files into the correct folders"
 
-    from zipTree(zipFile)
-    into outDir
-}
-
-task init {
-    doLast {
-        // how to get files in a dir
-        def zips = []
-        fileTree(dir: 'sdk', include: '*.zip').visit {
-            FileVisitDetails details ->
-                zips << details.file.name
+    if (OperatingSystem.current().isWindows()) {
+        exec {
+            workingDir './sdk'
+            commandLine 'powershell', '7z.exe', 'x', 'RTC-SDK-Server-6.0.3.zip'
         }
 
-        println zips
-
-        // how to work with custom properties from the command line
-        if (project.hasProperty('sdk')) {
-            println sdk
-        }
-
-        if (project.hasProperty('rtc')) {
-            println rtc
+        exec {
+            workingDir './jre'
+            commandLine 'powershell', '7z.exe', 'x', 'JTS-CCM-keys-Win64_6.0.3.zip', 'server\\jre', '-r', ';',
+                    'mv server\\jre\\* .', ';', 'rm -r server'
         }
     }
 }
