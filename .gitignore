@@ -4,6 +4,10 @@ derby.log
 conf/jetty/gen/
 conf/jetty/p2/
 
+# migration of configuration files, this will be able to be removed 
+# again later
+conf/jetty/user_configs/sdk_files.cfg
+
 my_clean.ps1
 
 # gradle
