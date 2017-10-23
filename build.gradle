@@ -61,47 +61,87 @@ task run(type: Exec) {
     }
 }
 
+task db {
+    group "Jetty"
+    description "Setup a clean database for the current sdk"
+    
+    doLast {
+        if (OperatingSystem.current().isWindows()) {
+
+        }
+
+        if (OperatingSystem.current().isLinux()) {
+            exec {
+                workingDir './'
+                commandLine 'unzip', '-qq', 'db_presets/603_db.zip', '-d', 'db'
+                ignoreExitValue true
+            }
+        }
+    }
+}
+
 // remember: https://stackoverflow.com/a/19256949/1969804 for dynamic lookup and stuff.
 task unzip {
     group "Jetty"
     description "Unzip sdk and server files into the correct folders"
 
-    if (OperatingSystem.current().isWindows()) {
-        exec {
-            workingDir './sdk'
-            commandLine 'powershell', '7z.exe', 'x', 'RTC-SDK-Server-6.0.3.zip'
+    doLast {
+
+        if (OperatingSystem.current().isWindows()) {
+            exec {
+                workingDir './sdk'
+                commandLine 'powershell', '7z.exe', 'x', 'RTC-SDK-Server-6.0.3.zip'
+            }
+
+            exec {
+                workingDir './jre'
+                commandLine 'powershell', '7z.exe', 'x', 'JTS-CCM-keys-Win64_6.0.3.zip', 'server\\jre', '-r', ';',
+                        'mv server\\jre\\* .', ';', 'rm -r server'
+            }
         }
 
-        exec {
-            workingDir './jre'
-            commandLine 'powershell', '7z.exe', 'x', 'JTS-CCM-keys-Win64_6.0.3.zip', 'server\\jre', '-r', ';',
-                    'mv server\\jre\\* .', ';', 'rm -r server'
+        if (OperatingSystem.current().isLinux()) {
+            exec {
+                workingDir './sdk'
+                commandLine 'unzip', '-q', 'RTC-SDK-Server-6.0.3.zip'
+                ignoreExitValue true
+            }
+
+            exec {
+                workingDir './jre'
+                commandLine 'unzip', '-q', 'JTS-CCM-keys-Linux64_6.0.3.zip', 'server/jre/*'
+                ignoreExitValue true
+            }
+
+            exec {
+                workingDir './jre'
+                commandLine 'sh', '-c', 'cp -r server/jre/* .'
+                ignoreExitValue true
+            }
+
+            exec {
+                workingDir './jre'
+                commandLine 'rm', '-r', 'server'
+                ignoreExitValue true
+            }
         }
     }
+}
 
-    if (OperatingSystem.current().isLinux()) {
-        exec {
-            workingDir './sdk'
-            commandLine 'unzip', '-q', 'RTC-SDK-Server-6.0.3.zip'
-            ignoreExitValue true
+task kill {
+    group "Jetty"
+    description "Remove database, jre and sdk files. This will more or less reset your working environment."
+
+    doLast {
+        if (OperatingSystem.current().isWindows()) {
+
         }
 
-        exec {
-            workingDir './jre'
-            commandLine 'unzip', '-q', 'JTS-CCM-keys-Linux64_6.0.3.zip', 'server/jre/*'
-            ignoreExitValue true
-        }
-
-        exec {
-            workingDir './jre'
-            commandLine 'sh', '-c', 'cp -r server/jre/* .'
-            ignoreExitValue true
-        }
-
-        exec {
-            workingDir './jre'
-            commandLine 'rm', '-r', 'server'
-            ignoreExitValue true
+        if (OperatingSystem.current().isLinux()) {
+            exec {
+                workingDir './'
+                commandLine './scripts/kill.sh'
+            }
         }
     }
 }
