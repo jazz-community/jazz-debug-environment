@@ -65,7 +65,6 @@ task db {
     group "Jetty"
     description "Setup a clean database for the current sdk"
 
-
     doLast {
         File dbZip = getZip('./db_presets')
 
@@ -76,14 +75,13 @@ task db {
         if (OperatingSystem.current().isLinux()) {
             exec {
                 workingDir './'
-                commandLine 'unzip', '-qq', dbZip, '-d', 'db'
+                commandLine 'unzip', '-q', dbZip, '-d', 'db'
                 ignoreExitValue true
             }
         }
     }
 }
 
-// remember: https://stackoverflow.com/a/19256949/1969804 for dynamic lookup and stuff.
 task unzip {
     group "Jetty"
     description "Unzip sdk and server files into the correct folders"
@@ -106,6 +104,7 @@ task unzip {
             }
         }
 
+        // yeah, maybe I wanna put this in a separate file as well...
         if (OperatingSystem.current().isLinux()) {
             exec {
                 workingDir './sdk'
@@ -154,7 +153,7 @@ task kill {
 
 // helper functions
 ext.getZip = { path ->
-    String filter = ''
+    String filter
     if (project.hasProperty('sdk')) {
         filter = '*' + sdk + '*.zip'
     } else {
