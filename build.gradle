@@ -44,8 +44,6 @@ task generate(type: Exec) {
 // after gradle has finished. However, forking doesn't really seem to work properly from within gradle, so I still
 // have to figure out some other way to do this. Maybe just go back to running run_jetty from the command line or
 // something like that.
-// to keep consistent with the "new terminal window" solution:
-// https://askubuntu.com/questions/476641/how-can-i-get-the-name-of-the-current-terminal-from-command-line
 task run(type: Exec) {
     group "Jetty"
     description "Start jazz server"
@@ -55,6 +53,8 @@ task run(type: Exec) {
     }
 
     // this is the simple, non-unix and non-portable way of dealing with running jetty in a separate process
+    // to keep consistent with the "new terminal window" solution:
+    // https://askubuntu.com/questions/476641/how-can-i-get-the-name-of-the-current-terminal-from-command-line
     if (OperatingSystem.current().isLinux()) {
         workingDir './'
         commandLine 'gnome-terminal', '-x', './scripts/run_jetty.sh'
@@ -80,6 +80,28 @@ task unzip {
     }
 
     if (OperatingSystem.current().isLinux()) {
+        exec {
+            workingDir './sdk'
+            commandLine 'unzip', '-q', 'RTC-SDK-Server-6.0.3.zip'
+            ignoreExitValue true
+        }
 
+        exec {
+            workingDir './jre'
+            commandLine 'unzip', '-q', 'JTS-CCM-keys-Linux64_6.0.3.zip', 'server/jre/*'
+            ignoreExitValue true
+        }
+
+        exec {
+            workingDir './jre'
+            commandLine 'sh', '-c', 'cp -r server/jre/* .'
+            ignoreExitValue true
+        }
+
+        exec {
+            workingDir './jre'
+            commandLine 'rm', '-r', 'server'
+            ignoreExitValue true
+        }
     }
 }
