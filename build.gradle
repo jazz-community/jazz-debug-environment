@@ -19,7 +19,7 @@ task cleanup(type: Exec) {
 
     if (OperatingSystem.current().isLinux()) {
         workingDir './'
-        commandLine './clean.sh'
+        commandLine './scripts/clean.sh'
     }
 }
 
@@ -33,7 +33,7 @@ task generate(type: Exec) {
 
     if (OperatingSystem.current().isLinux()) {
         workingDir './conf/jetty'
-        commandLine './generate_jetty_config.sh'
+        commandLine '../../scripts/generate_jetty_config.sh'
         ignoreExitValue true
     }
 }
