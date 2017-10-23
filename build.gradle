@@ -64,8 +64,11 @@ task run(type: Exec) {
 task db {
     group "Jetty"
     description "Setup a clean database for the current sdk"
-    
+
+
     doLast {
+        File dbZip = getZip('./db_presets')
+
         if (OperatingSystem.current().isWindows()) {
 
         }
@@ -73,7 +76,7 @@ task db {
         if (OperatingSystem.current().isLinux()) {
             exec {
                 workingDir './'
-                commandLine 'unzip', '-qq', 'db_presets/603_db.zip', '-d', 'db'
+                commandLine 'unzip', '-qq', dbZip, '-d', 'db'
                 ignoreExitValue true
             }
         }
@@ -87,15 +90,18 @@ task unzip {
 
     doLast {
 
+        File sdkZip = getZip('./sdk')
+        File jtsZip = getZip('./jre')
+
         if (OperatingSystem.current().isWindows()) {
             exec {
                 workingDir './sdk'
-                commandLine 'powershell', '7z.exe', 'x', 'RTC-SDK-Server-6.0.3.zip'
+                commandLine 'powershell', '7z.exe', 'x', sdkZip
             }
 
             exec {
                 workingDir './jre'
-                commandLine 'powershell', '7z.exe', 'x', 'JTS-CCM-keys-Win64_6.0.3.zip', 'server\\jre', '-r', ';',
+                commandLine 'powershell', '7z.exe', 'x', jtsZip, 'server\\jre', '-r', ';',
                         'mv server\\jre\\* .', ';', 'rm -r server'
             }
         }
@@ -103,13 +109,13 @@ task unzip {
         if (OperatingSystem.current().isLinux()) {
             exec {
                 workingDir './sdk'
-                commandLine 'unzip', '-q', 'RTC-SDK-Server-6.0.3.zip'
+                commandLine 'unzip', '-q', sdkZip
                 ignoreExitValue true
             }
 
             exec {
                 workingDir './jre'
-                commandLine 'unzip', '-q', 'JTS-CCM-keys-Linux64_6.0.3.zip', 'server/jre/*'
+                commandLine 'unzip', '-q', jtsZip, 'server/jre/*'
                 ignoreExitValue true
             }
 
@@ -144,4 +150,24 @@ task kill {
             }
         }
     }
+}
+
+// helper functions
+ext.getZip = { path ->
+    String filter = ''
+    if (project.hasProperty('sdk')) {
+        filter = '*' + sdk + '*.zip'
+    } else {
+        filter = '*.zip'
+    }
+
+    FileTree zips = fileTree(dir: path).include(filter)
+
+    if (zips.getFiles().size() > 1) {
+        throw new InvalidUserDataException('More than one zip file detected in ' + path +'. Ambiguous configuration. ' +
+                'Please specify an sdk version with \'-Psdk\'')
+    }
+
+    File zip = zips.getFiles().toArray()[0]
+    return zip
 }
