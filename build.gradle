@@ -38,6 +38,14 @@ task generate(type: Exec) {
     }
 }
 
+// Behaviour for run will differ between windows and linux. For windows, launching a new shell is probably the way to
+// go with how users would expect this script to be run.
+// For linux however, I would like to avoid forking the process and instead run jetty in the same window, maybe defered
+// after gradle has finished. However, forking doesn't really seem to work properly from within gradle, so I still
+// have to figure out some other way to do this. Maybe just go back to running run_jetty from the command line or
+// something like that.
+// to keep consistent with the "new terminal window" solution:
+// https://askubuntu.com/questions/476641/how-can-i-get-the-name-of-the-current-terminal-from-command-line
 task run(type: Exec) {
     group "Jetty"
     description "Start jazz server"
@@ -46,7 +54,10 @@ task run(type: Exec) {
         commandLine 'cmd', '/K', 'start', 'powershell','./scripts/run_jetty.ps1'
     }
 
+    // this is the simple, non-unix and non-portable way of dealing with running jetty in a separate process
     if (OperatingSystem.current().isLinux()) {
+        workingDir './'
+        commandLine 'gnome-terminal', '-x', './scripts/run_jetty.sh'
     }
 }
 
@@ -66,5 +77,9 @@ task unzip {
             commandLine 'powershell', '7z.exe', 'x', 'JTS-CCM-keys-Win64_6.0.3.zip', 'server\\jre', '-r', ';',
                     'mv server\\jre\\* .', ';', 'rm -r server'
         }
+    }
+
+    if (OperatingSystem.current().isLinux()) {
+
     }
 }
