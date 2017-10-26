@@ -72,13 +72,13 @@ function listSdkPlugins() {
         if ($_ -notlike "*.source_*") {
             echo $_"/@start"
         }
-    } > user_configs/sdk_files.cfg
+    } > gen/sdk_files_gen.cfg
 
     ls -File -Name $pluginPath | % {
         if ($_ -notlike "*.source_*") {
             echo $_"@start"
         }
-    } >> user_configs/sdk_files.cfg
+    } >> gen/sdk_files_gen.cfg
 
 }
 
