@@ -4,11 +4,11 @@
 rm -f user_configs/sdk_files.cfg
 
 for dir in ../../sdk/plugins/*/; do
-    echo $(basename $dir)"/@start" >> user_configs/sdk_files.cfg
+    echo $(basename $dir)"/@start" >> gen/sdk_files_gen.cfg
 done
 
 for file in ../../sdk/plugins/*.jar; do
-    echo $(basename $file)"@start" >> user_configs/sdk_files.cfg
+    echo $(basename $file)"@start" >> gen/sdk_files_gen.cfg
 done
 
 # clear gen folder
