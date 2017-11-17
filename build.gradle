@@ -151,6 +151,15 @@ task kill {
     }
 }
 
+task addplugin {
+    group "Jetty"
+    description "Create plugin configuration given a path to a plugin development directory"
+
+    doLast {
+        println "hi there"
+    }
+}
+
 // helper functions
 ext.getZip = { path ->
     String filter
