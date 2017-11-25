@@ -3,6 +3,8 @@
 # generate sdk_files.cfg
 #rm -f user_configs/sdk_files.cfg
 
+mkdir -p gen
+
 for dir in ../../sdk/plugins/*/; do
     echo $(basename $dir)"/@start" >> gen/sdk_files_gen.cfg
 done
