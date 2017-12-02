@@ -103,7 +103,7 @@ In the next steps, we will set up the provided scripts to launch jetty and ensur
  13. To run jetty from IntelliJ, click 'Run -> Debug... -> <Name of your debug configuration>'
 
 ## Contributing
-Please use the [Issue Tracker](https://github.com/jazz-community/rtc-absence-widget/issues) of this repository to report issues or suggest enhancements.
+Please use the [Issue Tracker](https://github.com/jazz-community/jazz-debug-environment/issues) of this repository to report issues or suggest enhancements.
 
 For general contribution guidelines, please refer to [CONTRIBUTING.md](https://github.com/jazz-community/jazz-debug-environment/blob/master/CONTRIBUTING.md)
 
