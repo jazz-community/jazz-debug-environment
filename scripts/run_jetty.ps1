@@ -27,6 +27,7 @@
 "-Djetty.https.port=7443" `
 "-Duser.language=en" `
 "-Dcom.siemens.bt.jazz.services.cqrest.cqrooturi=https://bt-clearquest.hqs.sbt.siemens.com/cqweb/oslc/" `
+"-Dcom.siemens.bt.jazz.services.PersonalTokenService.privateKey=abcdefghijklmnop" `
 "-Dfile.encoding=UTF-8" `
 -classpath sdk\plugins\org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar org.eclipse.equinox.launcher.Main `
 -dev "file:conf/jetty/gen/dev.properties" `
