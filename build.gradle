@@ -52,7 +52,7 @@ task run(type: Exec) {
 
     if (OperatingSystem.current().isWindows()) {
         workingDir './'
-        commandLine 'cmd', '/K', 'start', 'powershell','./scripts/run_jetty.ps1'
+        commandLine 'cmd', '/K', 'start', 'powershell', './scripts/run_jetty.ps1'
     }
 
     // this is the simple, non-unix and non-portable way of dealing with running jetty in a separate process
@@ -176,7 +176,7 @@ ext.getZip = { path ->
     FileTree zips = fileTree(dir: path).include(filter)
 
     if (zips.getFiles().size() > 1) {
-        throw new InvalidUserDataException('More than one zip file detected in ' + path +'. Ambiguous configuration. ' +
+        throw new InvalidUserDataException('More than one zip file detected in ' + path + '. Ambiguous configuration. ' +
                 'Please specify an sdk version with \'-Psdk\'')
     }
 
