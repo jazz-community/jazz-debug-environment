@@ -1,6 +1,6 @@
 & "jre\bin\java.exe" `
 -Xdebug "-agentlib:jdwp=transport=dt_socket,address=127.0.0.1:9999,server=y,suspend=n" `
--Xmx512M `
+-Xmx1024M `
 -XX:PermSize=64M `
 -XX:MaxPermSize=256M `
 "-Dlog4j.configuration=file:conf/jazz/log4j.properties" `
