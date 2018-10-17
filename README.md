@@ -4,8 +4,6 @@ Jazz Development Environment provides you with tooling for developing RTC Plugin
 
 Setup and usage is handled in a convention over configuration style, which keeps editing files and dealing with setup to a minimum. It is mainly focused on how `jazz-community` plugins are developed, but all related tools are open sourced under the [jazz community](https://github.com/jazz-community/) organization.
 
-For a more detailed tour of the features, please see the [wiki](link to features)
-
 ## Wiki Table Of Contents
 The [Wiki](https://github.com/jazz-community/jazz-debug-environment/wiki) covers a vast amount of topics on how to work with the jazz development environment.
 
