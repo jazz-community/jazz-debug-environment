@@ -1,52 +1,78 @@
-apply plugin: 'java'
+import com.github.sherter.googlejavaformatgradleplugin.GoogleJavaFormat
+import org.jazzcommunity.development.BackupTask
+import org.jazzcommunity.development.BootStrapTask
+import org.jazzcommunity.development.RunTask
+import org.jazzcommunity.development.SetupTask
+import org.jazzcommunity.development.InfoTask
+import org.jazzcommunity.development.library.DetectOperatingSystem
+import org.jazzcommunity.development.library.RuntimeDetector
+import org.jazzcommunity.development.library.config.ConfigReader
 
-import org.gradle.internal.os.OperatingSystem;
-
-task detect {
-    doLast {
-        println("Linux: " + OperatingSystem.current().isLinux())
-        println("Windows: " + OperatingSystem.current().isWindows())
-    }
+plugins {
+    id 'java-gradle-plugin'
+    id 'com.github.sherter.google-java-format' version '0.7.1'
 }
 
-task cleanup(type: Exec) {
-    group "Jetty"
-    description "Delete generated and runtime files"
-    if (OperatingSystem.current().isWindows()) {
-        workingDir './'
-        commandLine 'powershell.exe', './scripts/clean.ps1'
-    }
-
-    if (OperatingSystem.current().isLinux()) {
-        workingDir './'
-        commandLine './clean.sh'
-    }
+repositories {
+    jcenter()
+    mavenCentral()
 }
 
-task generate(type: Exec) {
-    group "Jetty"
-    description "Create jazz and equinox configuration files"
-    if (OperatingSystem.current().isWindows()) {
-        workingDir 'conf/jetty'
-        commandLine 'powershell.exe', '../../scripts/generate_jetty_config.ps1'
-    }
-
-    if (OperatingSystem.current().isLinux()) {
-        workingDir './conf/jetty'
-        commandLine './generate_jetty_config.sh'
-        ignoreExitValue true
-    }
+task format(type: GoogleJavaFormat) {
+    group = "jde development"
+    description = "Format jde source code according to the google code style."
 }
 
-task run(type: Exec) {
-    group "Jetty"
-    description "Start jazz server"
-    if (OperatingSystem.current().isWindows()) {
-        workingDir './'
-        commandLine 'cmd', '/K', 'start', 'powershell','./scripts/run_jetty.ps1'
-    }
+googleJavaFormat {
+    group = "jde development"
+    description = "Source folders to include in formatting."
+    include 'buildSrc/**'
+}
 
-    if (OperatingSystem.current().isLinux()) {
-    }
+task bootstrap(type: BootStrapTask) {
+    group = "Jazz Development Environment"
+    description = "Create folders for user environment. Generally only needs to be run once."
+}
 
+task info(type: InfoTask) {
+    group = "Jazz Development Environment"
+    description = "Print information of the currently available configuration."
+}
+
+task backup(type: BackupTask) {
+    group = "Jazz Development Environment"
+    description = "Backup user files. Options: [--mode=slim|user|full], default=slim"
+    // default mode used when no command line argument is supplied, eg no '--mode=full'
+    mode = "slim"
+}
+
+task setup(type: SetupTask) {
+    group = "Jazz Development Environment"
+    description = "Setup a new runtime based on an RTC sdk. Options: [--sdk=VERSION], default=latest"
+    // will default to setting up the latest sdk version
+    sdk = ""
+}
+
+allprojects {
+    afterEvaluate { project ->
+        def runtime = RuntimeDetector.get(project)
+        if (runtime.isPresent()) {
+            project.task('run', type: RunTask) {
+                group = "Jazz Development Environment"
+                description = "Run a jetty server for debugging. Options: [-Pruntime=VERSION], default=latest"
+                workingDir './jde/runtime/' + runtime.get()
+                // Somehow, the native OperatingSystem interface doesn't work properly yet
+                // It's an incubating feature, so I guess we'll just have to wait.
+                if (DetectOperatingSystem.windows) {
+                    commandLine 'cmd', '/K', 'start', 'powershell', './run_jetty.ps1'
+                }
+
+                if (DetectOperatingSystem.linux) {
+                    def line = ConfigReader.terminalEmulator()
+                    commandLine line
+                }
+            }
+        }
+
+    }
 }

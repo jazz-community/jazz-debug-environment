@@ -1,5 +1,0 @@
-osgi.bundles.defaultStartLevel=4
-osgi.install.area=sdk
-osgi.framework=sdk/plugins/org.eclipse.osgi_3.10.2.v20150203-1939.jar
-osgi.configuration.cascaded=false
-osgi.bundles=reference\:file\:org.eclipse.equinox.simpleconfigurator_1.1.0.v20131217-1203.jar@1\:start

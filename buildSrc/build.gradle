@@ -1,0 +1,22 @@
+plugins {
+    id 'java-gradle-plugin'
+}
+
+dependencies {
+    compile group: 'org.apache.commons', name: 'commons-compress', version: '1.18'
+    // this needs to be in here because of a known limitation:
+    // https://stackoverflow.com/questions/28229095/apache-commons-compress-using-7zip
+    compile group: 'org.tukaani', name: 'xz', version: '1.8'
+    compile group: 'com.google.guava', name: 'guava', version: '26.0-jre'
+    compile "org.jtwig:jtwig-core:5.87.0.RELEASE"
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:unchecked"
+    options.deprecation = true
+}

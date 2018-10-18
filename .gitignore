@@ -1,20 +1,26 @@
-# content ignored due to licensing if its content 
-workspace
-derby.log
-conf/jetty/gen/
-conf/jetty/p2/
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
 
-# migration of configuration files, this will be able to be removed 
-# again later
-#conf/jetty/user_configs/sdk_files.cfg
+# Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
+!/.mvn/wrapper/maven-wrapper.jar
 
-scripts/my_*
+.gradle
+**/build/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+.idea
 
-# gradle
-.gradle/
-
-# idea
-.idea/
-*.iml
-
+jde/
+jde-slim/
+backup/
+jazz-debug-environment-2.iml
 *.swp
+buildSrc/out

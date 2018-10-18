@@ -1,0 +1,5 @@
+osgi.bundles.defaultStartLevel=4
+osgi.install.area=sdk
+osgi.framework=sdk/plugins/{{ osgiPath }}
+osgi.configuration.cascaded=false
+osgi.bundles=reference\:file\:{{ configurator }}@1\:start,{% for bundle in bundles %}reference\:file\:{{ bundle }},{% endfor %}{% for config in configs %}{{ config }},{% endfor %}
