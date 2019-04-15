@@ -7,7 +7,7 @@ Setup and usage is handled in a convention over configuration style, which keeps
 ## Wiki Table Of Contents
 The [Wiki](https://github.com/jazz-community/jazz-debug-environment/wiki) covers a vast amount of topics on how to work with the jazz development environment.
 
-* [Home](Home)
+* [Home](https://github.com/jazz-community/jazz-debug-environment/wiki)
 * [Quick Start](https://github.com/jazz-community/jazz-debug-environment/wiki/2.0-Quick-Start)
   * [Requirements](https://github.com/jazz-community/jazz-debug-environment/wiki/2.1-Requirements)
   * [Instructions](https://github.com/jazz-community/jazz-debug-environment/wiki/2.2-Instructions)
