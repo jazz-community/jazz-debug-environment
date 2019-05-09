@@ -66,6 +66,15 @@ public class ConfigReader {
     return read(source);
   }
 
+  public static Stream<String> readLines(File path) {
+    if (!path.exists()) {
+      System.out.println(String.format("File %s does not exist", path));
+    }
+
+    CharSource source = Files.asCharSource(path, Charset.forName("UTF-8"));
+    return read(source);
+  }
+
   // TODO: duplicate code, same as in service entry. Extract both functions to something
   // TODO: like "readVerboseError". Could be combined with the call to charsource
   private static Stream<String> read(CharSource source) {

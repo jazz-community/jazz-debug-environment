@@ -1,33 +1,124 @@
-import com.github.sherter.googlejavaformatgradleplugin.GoogleJavaFormat
 import org.jazzcommunity.development.BackupTask
 import org.jazzcommunity.development.BootStrapTask
+import org.jazzcommunity.development.DeploymentTask
+import org.jazzcommunity.development.FinalizeTask
+import org.jazzcommunity.development.InitializeTask
+import org.jazzcommunity.development.P2CreationTask
+import org.jazzcommunity.development.P2ProfileTask
 import org.jazzcommunity.development.RunTask
 import org.jazzcommunity.development.SetupTask
 import org.jazzcommunity.development.InfoTask
+import org.jazzcommunity.development.UpgradeTask
 import org.jazzcommunity.development.library.DetectOperatingSystem
+import org.jazzcommunity.development.library.FileTools
 import org.jazzcommunity.development.library.RuntimeDetector
 import org.jazzcommunity.development.library.config.ConfigReader
 
 plugins {
     id 'java-gradle-plugin'
-    id 'com.github.sherter.google-java-format' version '0.7.1'
+    id 'com.diffplug.gradle.equinoxlaunch'
+    id 'com.diffplug.gradle.oomph.ide'
+}
+
+dependencies {
+    compile 'com.diffplug.gradle:goomph:3.17.4'
 }
 
 repositories {
     jcenter()
     mavenCentral()
+    maven { url 'https://plugins.gradle.org/m2/' }
 }
 
-task format(type: GoogleJavaFormat) {
-    group = "jde development"
-    description = "Format jde source code according to the google code style."
+oomphIde {
+    repoEclipseLatest()
+    splash 'buildSrc/resources/logo.png'
+
+    /*
+     * When debugging plugins for the goomph generated environment, it really helps when you:
+     * 1. launch the ide using gradlew run
+     * 2. wait until eclipse has loaded and close the application
+     * 3. (manually deploy whatever plugin you need if not added here yet)
+     * 4. use https://stackoverflow.com/questions/1489648/eclipse-doesnt-load-plugins-in-the-dropins-folder
+     *    to get full debug information of plugin deployment
+     */
+
+// Use legacy GEF (up to 4.0.0) because the new releases don't have the required
+// org.eclipse.draw2d and org.eclipse.gef bundles for feature based launches anymore.
+    repo 'https://download.eclipse.org/tools/gef/updates/legacy/releases/4.0.0_gef-master_1952'
+    feature 'org.eclipse.gef'
+
+    pde {
+        targetplatform 'ibm-sdk', {
+            it.installation project.hasProperty("sdk")
+                    // TODO: Keep verifying that these work. Seems to be the case so far.
+                    ? FileTools.toAbsolute("jde/runtime/$sdk/sdk").path
+                    : RuntimeDetector.getTargetPlatform(project)
+        }
+    }
+
+    // add the custom launches for creating required runtime files for a new release
+    if (FileTools.exists('jde/dev/launches')) {
+        addProjectFolder 'jde/dev/launches'
+    }
+
+// Example for how to load proxy settings. Most likely, this should be stored to the
+// user folder folder as a template, and only be loaded if it exists with content.
+// Or something like that.
+//    p2director {
+//        addArg('plugincustomization', 'tool/fiddler-proxy.ini')
+//    }
+
+    // adding these features doesn't work because eclipse and the p2 repository have dependency
+    // collisions. Otherwise, manual importing of the common.tests.utils plugin would not be
+    // necessary.
+    // Maybe finding the eclipse version with matching plugins could work, which is why this is
+    // left here for documentation purposes
+//    repo FileTools.toAbsolute('jde/p2repo/6.0.6')
+//    feature 'com.ibm.team.repository.services.jfs.feature'
+//    feature 'com.ibm.team.repository.services.tests.jfs.feature'
+//    feature 'com.ibm.team.common.tests.utils.feature'
 }
 
-googleJavaFormat {
-    group = "jde development"
-    description = "Source folders to include in formatting."
-    include 'buildSrc/**'
+task initialize(type: InitializeTask) {
+    dependsOn ideClean
+    dependsOn ideSetupP2
+    dependsOn ideSetupWorkspace
+    // make sure initialize always creates exactly one workspace, this makes dealing with
+    // identical files in the finalize task far easier
+    tasks.findByName('ideSetupP2').mustRunAfter('ideClean')
+    tasks.findByName('ideSetupWorkspace').mustRunAfter('ideSetupP2')
+    finalizedBy ide
 }
+
+task packageDatabase(type: Zip) {
+    from 'jde/dev/db'
+    include '**/*'
+    archiveName FileTools.newestVersion('jde/sdks') + '_db.zip'
+    destinationDir(file('jde/dev'))
+}
+
+task finalize(type: FinalizeTask) {
+    // maybe find a way to just ignore this task if initialize hasn't been run
+    dependsOn packageDatabase
+}
+
+task p2create(type: P2CreationTask) {
+    dependsOn ideSetupP2
+    sdk = ""
+}
+
+task p2use(type: P2ProfileTask) {
+    sdk = ""
+    out = "file"
+    create = "false"
+}
+
+//// TODO: Planned for next release
+//task deploy(type: DeploymentTask) {
+//    group = ""
+//    description = ""
+//}
 
 task bootstrap(type: BootStrapTask) {
     group = "Jazz Development Environment"
@@ -51,6 +142,11 @@ task setup(type: SetupTask) {
     description = "Setup a new runtime based on an RTC sdk. Options: [--sdk=VERSION], default=latest"
     // will default to setting up the latest sdk version
     sdk = ""
+}
+
+task upgrade(type: UpgradeTask) {
+    group = "Jazz Development Environment"
+    description = "Copies all non-user files after upgrading from an older jazz development environment"
 }
 
 allprojects {

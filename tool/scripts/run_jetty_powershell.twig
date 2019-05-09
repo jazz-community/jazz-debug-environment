@@ -26,7 +26,7 @@
 "-Djetty.http.port=7080" `
 "-Djetty.https.port=7443" `
 "-Duser.language=en" `{% if (parameters != null) %}{% for parameter in parameters %}
-    "-D{{ parameter }}" `{% endfor %}{% endif %}
+"-D{{ parameter }}" `{% endfor %}{% endif %}
 "-Dfile.encoding=UTF-8" `
 -classpath {{ launcher }} org.eclipse.equinox.launcher.Main `
 -dev "file:conf/dev.properties" `

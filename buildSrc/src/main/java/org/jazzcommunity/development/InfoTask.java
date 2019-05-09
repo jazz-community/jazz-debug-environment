@@ -2,6 +2,7 @@ package org.jazzcommunity.development;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Objects;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
 import org.jazzcommunity.development.library.FileTools;
@@ -23,6 +24,8 @@ public class InfoTask extends DefaultTask {
     printFiles("jde/dbs");
     System.out.println("Available configurations:");
     printFiles("tool/sdk_files");
+    System.out.println("Available P2 Repository URLs:");
+    printP2Repos("jde/p2repo");
     System.out.println("Set up run times: ");
     RuntimeDetector.getRuntimes().forEach(System.out::println);
     System.out.println("Available plugins:");
@@ -32,5 +35,13 @@ public class InfoTask extends DefaultTask {
   private static void printFiles(String path) {
     File directory = FileTools.toAbsolute(path);
     Arrays.stream(directory.listFiles()).forEach(file -> System.out.println("\t" + file.getName()));
+  }
+
+  private static void printP2Repos(String path) {
+    File directory = FileTools.toAbsolute(path);
+    if (directory.listFiles() != null) {
+      Arrays.stream(Objects.requireNonNull(directory.listFiles()))
+          .forEach(r -> System.out.println(String.format("\tfile:%s", r.getAbsolutePath())));
+    }
   }
 }

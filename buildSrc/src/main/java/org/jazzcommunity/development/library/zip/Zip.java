@@ -15,6 +15,16 @@ public class Zip {
   /** Largely taken from https://gist.github.com/cassiuscai/cec0c8e418ce265d4227fef56d874aa6 */
   private static final int BUFFER_SIZE = 1 << 12;
 
+  // these are just wrappers to enable logging for extracted files
+  public static void extract(File from, File to) throws IOException {
+    extract(from, to, "");
+  }
+
+  public static void extract(File from, File to, String subfolder) throws IOException {
+    System.out.println(String.format("Decompress %s to %s", from, to));
+    Zip.decompress(from, to, subfolder);
+  }
+
   public static void decompress(File source, File target) throws IOException {
     decompress(source, target, "");
   }
