@@ -15,4 +15,4 @@ include 'api'
 include 'services:webservice'
 */
 
-rootProject.name = 'jazz-debug-environment-2'
+rootProject.name = 'jazz-debug-environment-2.1'

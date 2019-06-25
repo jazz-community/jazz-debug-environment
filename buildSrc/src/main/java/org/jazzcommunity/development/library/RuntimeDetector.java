@@ -5,8 +5,20 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import org.gradle.api.Project;
 
-public class RuntimeDetector {
+public final class RuntimeDetector {
   private RuntimeDetector() {}
+
+  public static String getTargetPlatform(Project project) {
+    String newestVersion = FileTools.newestVersion("jde/sdks");
+
+    if (FileTools.exists(String.format("jde/dev/initialize/%s", newestVersion))) {
+      return FileTools.toAbsolute(String.format("jde/dev/initialize/%s/sdk", newestVersion))
+          .getPath();
+    }
+
+    String newestSdk = String.format("jde/runtime/%s/sdk", get(project));
+    return FileTools.toAbsolute(newestSdk).getPath();
+  }
 
   public static Optional<String> get(Project project) {
     String runtime =

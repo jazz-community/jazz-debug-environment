@@ -1,6 +1,5 @@
 package org.jazzcommunity.development;
 
-import java.io.File;
 import java.io.IOException;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
@@ -30,7 +29,7 @@ public class SetupTask extends DefaultTask {
       return;
     }
 
-    // we need some sort of sanity check if we can set up a proper runtime
+    // VersionChecker is just a sanity test for what can be set up.
     // 1) check sdk
     // 2) check server
     // 3) check database
@@ -41,18 +40,17 @@ public class SetupTask extends DefaultTask {
   }
 
   private static void setup(String version) throws IOException {
-    // decompression works, now we just need to do it for all necessary files.
     // 1) extract sdk
-    extract(
+    Zip.extract(
         FileTools.byVersion("jde/sdks", version),
         FileTools.toAbsolute(String.format("jde/runtime/%s/sdk", version)));
     // 2) extract server
-    extract(
+    Zip.extract(
         FileTools.byVersion("jde/servers", version),
         FileTools.toAbsolute(String.format("jde/runtime/%s/jre", version)),
         "server/jre");
     // 3) extract database
-    extract(
+    Zip.extract(
         FileTools.byVersion("jde/dbs", version),
         FileTools.toAbsolute(String.format("jde/runtime/%s/db", version)));
     // 4) copy other necessary static files, probably also needs checks...
@@ -76,15 +74,5 @@ public class SetupTask extends DefaultTask {
   @Option(option = "sdk", description = "Which SDK version to set up. Default is latest.")
   public void setSdk(String sdk) {
     this.sdk = sdk;
-  }
-
-  // these are just wrappers to enable logging for extracted files
-  private static void extract(File from, File to) throws IOException {
-    extract(from, to, "");
-  }
-
-  private static void extract(File from, File to, String subfolder) throws IOException {
-    System.out.println(String.format("Decompress %s to %s", from, to));
-    Zip.decompress(from, to, subfolder);
   }
 }

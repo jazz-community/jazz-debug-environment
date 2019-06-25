@@ -13,7 +13,7 @@ import org.jazzcommunity.development.library.zip.SevenZip;
 public class BackupTask extends DefaultTask {
   private String mode;
 
-  private static String[] SLIM_FILTER = {"sdks", "servers", "sdk", "jre"};
+  private static String[] SLIM_FILTER = {"sdks", "servers", "sdk", "jre", "p2repo"};
 
   /**
    * Create a zip file of the complete jde folder, either for backing up or giving to someone else

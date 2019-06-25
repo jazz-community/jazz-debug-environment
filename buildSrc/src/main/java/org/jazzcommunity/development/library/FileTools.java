@@ -1,11 +1,14 @@
 package org.jazzcommunity.development.library;
 
+import com.google.common.io.MoreFiles;
+import com.google.common.io.RecursiveDeleteOption;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Comparator;
+import java.util.Date;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -59,14 +62,15 @@ public final class FileTools {
     return extractVersion(file);
   }
 
-  public static File newestFile(String dir) {
+  private static File newestFile(String dir) {
     File[] files = getFiles(dir);
 
     if (files == null) {
       throw new RuntimeException(String.format("No files available in %s.", dir));
     }
 
-    return Arrays.stream(files).min(Comparator.reverseOrder()).get();
+    VersionComparator comp = new VersionComparator();
+    return Arrays.stream(files).max(comp).get();
   }
 
   public static void makeDirectory(File path) {
@@ -105,8 +109,60 @@ public final class FileTools {
     }
   }
 
-  private static String extractVersion(File file) {
-    Pattern pattern = Pattern.compile("-([0-9].*).zip$");
+  public static void backupFile(File from) {
+    String name =
+        String.format(
+            "backup/%s_%s.backup",
+            from.getName(), new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date()));
+
+    try {
+      File destination = toAbsolute(name);
+      Files.copy(from.toPath(), destination.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    } catch (IOException e) {
+      Logger logger = LoggerFactory.getLogger("FileTools.backupFile");
+      logger.error(String.format("Failed to backup: %s", e.getMessage()));
+      if (logger.isTraceEnabled()) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  public static void deleteFolder(File folder) {
+    try {
+      MoreFiles.deleteRecursively(folder.toPath(), RecursiveDeleteOption.ALLOW_INSECURE);
+    } catch (IOException e) {
+      Logger logger = LoggerFactory.getLogger("FileTools.deleteFolder");
+      logger.error(
+          String.format(
+              "Failed to delete folder %s: %s", folder.getAbsolutePath(), e.getMessage()));
+      if (logger.isTraceEnabled()) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  public static Boolean versionAvailable(String dir, String version) {
+    boolean exists = FileTools.byVersion(dir, version).exists();
+
+    if (!exists) {
+      System.out.println(
+          String.format("Missing file for version %s in directory %s", version, dir));
+    }
+
+    return exists;
+  }
+
+  public static String folderVersion(String path) {
+    String[] parts = path.split("/");
+    return parts[parts.length - 1];
+  }
+
+  public static String extractVersion(File file) {
+    // TODO: fix these regex, it's pretty much just look that it works so far
+    Pattern pattern =
+        file.getName().endsWith("zip")
+            ? Pattern.compile("[-_]([0-9].*).zip")
+            : Pattern.compile("([0-9].*)$");
     Matcher matcher = pattern.matcher(file.getName());
     // we only need exactly one match, so no need to loop
     matcher.find();

@@ -1,0 +1,290 @@
+<?xml version="1.0"?>
+
+<!--
+    Licensed Materials - Property of IBM
+    © Copyright IBM Corporation 2010, 2016. All Rights Reserved.
+    
+    Note to U.S. Government Users Restricted Rights:  
+    Use, duplication or disclosure restricted by GSA ADP Schedule 
+    Contract with IBM Corp. 
+ -->
+
+<rdf:Description
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:dc="http://purl.org/dc/terms/"
+     xmlns:jfs="http://jazz.net/xmlns/prod/jazz/jfs/1.0/" 
+     xmlns:jd="http://jazz.net/xmlns/prod/jazz/discovery/1.0/"
+     xmlns:jdb="http://jazz.net/xmlns/prod/jazz/dashboard/1.0/"
+     xmlns:jp06="http://jazz.net/xmlns/prod/jazz/process/0.6/"
+     xmlns:jp="http://jazz.net/xmlns/prod/jazz/process/1.0/"
+     xmlns:jtp="http://jazz.net/xmlns/prod/jazz/jtp/0.6/"
+     xmlns:ju="http://jazz.net/ns/ui#"
+     xmlns:oslc="http://open-services.net/ns/core#"
+     xmlns:trs="http://jazz.net/ns/trs#"
+	 xmlns:trs2="http://open-services.net/ns/core/trs#"
+     rdf:about="%server-URL%/rootservices">
+
+  <!-- 
+  		Default root service registry document for an RTC server.
+  		Contains contributions for core JFS services and components
+  		and OSLC Change Management.
+  		Specification is available at https://jazz.net/wiki/bin/view/Main/RootServicesSpec
+   -->
+
+  <!-- Add descriptive title here -->
+  <dc:title xml:lang="en">Change and Configuration Management</dc:title>
+
+  <!-- List of friends (applications known to this application) -->
+  <jd:friends
+      rdf:resource="%server-URL%/friends" />
+       
+  <!-- Discovery service for the JFS server and associated applications -->
+  <jd:discovery
+      rdf:resource="%server-URL%/discovery" />
+       
+  <!-- Viewlet-related properties -->
+  <jd:viewletServiceRoot
+  	  rdf:resource="%server-URL%" />
+
+  <jd:viewletWebUIRoot
+  	  rdf:resource="%server-URL%" />
+
+  <!-- Default root service registry document for a JFS server. -->
+
+  <jd:jsaSsoEnabled>%jsa-sso-enabled%</jd:jsaSsoEnabled>
+
+  <jfs:oauthRequestTokenUrl
+  	  rdf:resource="%server-URL%/oauth-request-token" />
+  
+  <jfs:oauthAccessTokenUrl
+  	  rdf:resource="%server-URL%/oauth-access-token" />
+  	  
+  <jfs:oauthRealmName>%realm-name%</jfs:oauthRealmName>
+  <jfs:oauthDomain>%server-URL%</jfs:oauthDomain>
+  	  
+  <jfs:oauthUserAuthorizationUrl
+  	  rdf:resource="%server-URL%/oauth-authorize" />
+  	  
+  <jfs:oauthRequestConsumerKeyUrl
+      rdf:resource="%server-URL%/oauth-request-consumer" />
+      
+  <jfs:oauthApprovalModuleUrl
+      rdf:resource="%server-URL%/_ajax-modules/com.ibm.team.repository.AuthorizeOAuth" />	  
+  
+  <!-- JAuth URLS -->
+  
+  <jfs:jauthIssueTokenUrl
+      rdf:resource="%server-URL%/jauth-issue-token" />
+      
+  <jfs:jauthCheckTokenUrl
+      rdf:resource="%server-URL%/jauth-check-token" />
+      
+  <jfs:jauthRevokeTokenUrl
+      rdf:resource="%server-URL%/jauth-revoke-token" />
+      
+  <jfs:jauthCheckAuthUrl
+      rdf:resource="%server-URL%/jauth-check-auth" />
+      
+  <jfs:jauthProxyUrl
+      rdf:resource="%server-URL%/jauth-proxy" />
+      
+  <!-- service for finding users and getting user info -->
+  <jfs:users
+  	  rdf:resource="%user-server-URL%/users"   />
+  
+  <!-- Service to redirect to the resource that represents the authenticated user -->
+  <jfs:currentUser
+  	  rdf:resource="%server-URL%/whoami"   />
+  	  
+  <!-- JFS storage service --> 
+  <jfs:storage
+  	  rdf:resource="%server-URL%/storage"   />
+  
+  <!-- JFS SPARQL query service -->
+  <jfs:query
+  	  rdf:resource="%server-URL%/query"   />
+
+  <!-- Put RTC changes in here, so we do not have to merge all the time : START -->
+
+  <!-- Change Management service catalog -->
+  <oslc_cm:cmServiceProviders
+	      xmlns:oslc_cm="http://open-services.net/xmlns/cm/1.0/"
+	      rdf:resource="%server-URL%/oslc/workitems/catalog" />
+	      
+  <oslc_config:cmServiceProviders
+	      xmlns:oslc_config="http://open-services.net/ns/config#"
+	      rdf:resource="%server-URL%/rtcoslc/catalog" />
+	      
+  <oslc_scm:scmServiceProviders
+	      xmlns:oslc_scm="http://open-services.net/xmlns/scm/1.0/"
+	      rdf:resource="%server-URL%/oslc-scm/catalog" />
+	      
+  <jd:oslcCatalogs>
+		<oslc:ServiceProviderCatalog rdf:about="%server-URL%/oslc/workitems/catalog">
+			<oslc:domain rdf:resource="http://open-services.net/ns/cm#"/>
+    	</oslc:ServiceProviderCatalog>
+  </jd:oslcCatalogs>
+
+  <jd:oslcCatalogs>
+		<oslc:ServiceProviderCatalog rdf:about="%server-URL%/oslc-scm/catalog">
+			<oslc:domain rdf:resource="http://open-services.net/ns/scm#"/>
+		</oslc:ServiceProviderCatalog>
+  </jd:oslcCatalogs>
+  
+  <!-- Change Management Tracked Resource Set 1.0 Provider -->
+  <rtc_cm:trackedResourceSetProvider xmlns:rtc_cm="http://jazz.net/xmlns/prod/jazz/rtc/cm/1.0/">
+  		<trs:TrackedResourceSetProvider>
+			<trs:trackedResourceSet rdf:resource="%server-URL%/oslc/workitems/trs" />
+			<dc:title>TRS 1.0 for RTC Resources</dc:title>
+			<dc:description>TRS 1.0 feed for RTC resources</dc:description>
+			<dc:type     rdf:resource="http://open-services.net/ns/cm#" />
+			<oslc:domain rdf:resource="http://open-services.net/ns/cm#" />			
+			<oslc:domain rdf:resource="http://open-services.net/ns/config#" />			
+  		</trs:TrackedResourceSetProvider>
+ </rtc_cm:trackedResourceSetProvider>
+ 
+   <!-- Change Management Tracked Resource Set 2.0 Provider -->
+  <rtc_cm:trackedResourceSetProvider xmlns:rtc_cm="http://jazz.net/xmlns/prod/jazz/rtc/cm/1.0/">
+  		<trs2:TrackedResourceSet>
+			<trs2:trackedResourceSet rdf:resource="%server-URL%/oslc/workitems/trs2" />
+			<dc:title>TRS 2.0 for RTC Resources</dc:title>
+			<dc:description>TRS 2.0 feed for RTC resources</dc:description>
+			<dc:type     rdf:resource="http://open-services.net/ns/cm#" />
+			<oslc:domain rdf:resource="http://open-services.net/ns/cm#" />			
+			<oslc:domain rdf:resource="http://open-services.net/ns/config#" />			
+  		</trs2:TrackedResourceSet>
+  </rtc_cm:trackedResourceSetProvider>
+  
+  <!--  Process Component Tracked Resource Set 2.0 Provider -->
+  <rtc_cm:trackedResourceSetProvider xmlns:rtc_cm="http://jazz.net/xmlns/prod/jazz/rtc/cm/1.0/">
+	<trs2:TrackedResourceSet>
+		<trs2:trackedResourceSet rdf:resource="%server-URL%/process-trs2" />
+		<dc:title>TRS 2.0 for RTC Process Resources</dc:title>
+		<dc:description>TRS 2.0 feed for process resources in RTC</dc:description>
+		<dc:type     rdf:resource="http://jazz.net/ns/process#" />
+		<oslc:domain rdf:resource="http://jazz.net/ns/process#" />
+	</trs2:TrackedResourceSet>
+  </rtc_cm:trackedResourceSetProvider>
+  
+  <!--  SCM Component Tracked Resource Set 2.0 Provider -->
+  <rtc_cm:trackedResourceSetProvider xmlns:rtc_cm="http://jazz.net/xmlns/prod/jazz/rtc/cm/1.0/">
+	<trs2:TrackedResourceSet>
+		<trs2:trackedResourceSet rdf:resource="%server-URL%/rtcoslc/scm/reportable/trs/cs" />
+		<dc:title>TRS 2.0 for RTC SCM Resources</dc:title>
+		<dc:description>TRS 2.0 feed for SCM resources in RTC</dc:description>
+		<dc:type     rdf:resource="http://jazz.net/ns/scm#" />
+		<oslc:domain rdf:resource="http://jazz.net/ns/scm#" />
+	</trs2:TrackedResourceSet>
+  </rtc_cm:trackedResourceSetProvider>
+  <rtc_cm:trackedResourceSetProvider xmlns:rtc_cm="http://jazz.net/xmlns/prod/jazz/rtc/cm/1.0/">
+	<trs2:TrackedResourceSet>
+		<trs2:trackedResourceSet rdf:resource="%server-URL%/rtcoslc/scm/cslink/trs" />
+		<dc:title>TRS 2.0 for RTC SCM Link Resources</dc:title>
+		<dc:description>TRS 2.0 feed for SCM link resources in RTC</dc:description>
+		<dc:type     rdf:resource="http://jazz.net/ns/scm#" />
+		<oslc:domain rdf:resource="http://jazz.net/ns/scm#" />
+	</trs2:TrackedResourceSet>
+  </rtc_cm:trackedResourceSetProvider>
+
+	      
+  <jd:registration
+     rdf:resource="%server-URL%/service/com.ibm.team.repository.service.internal.setup.IRegistrationHandlerService" />
+     
+   <jfs:setupWizardDescriptor
+     rdf:resource="%server-URL%/service/com.ibm.team.repository.service.internal.setup.ISetupWizardDescriptorService"/>
+     
+   <jfs:adminWebUI rdf:resource="%server-URL%/admin"/>
+
+  <!-- Put RTC changes in here, so we do not have to merge all the time : END -->
+  
+  <!-- JFS indexing service --> 
+  <jfs:indexing
+  	  rdf:resource="%server-URL%/indexing"   />
+  	  
+  <!-- JFS revisions and history of storage resources -->  	  
+  <jfs:history
+  	  rdf:resource="%server-URL%/history"   />
+  
+  <!-- JFS full text search -->
+  <jfs:search
+  	  rdf:resource="%server-URL%/search"   />
+
+  <!-- JFS baseline service --> 
+  <jfs:baselines
+  	  rdf:resource="%server-URL%/baselines"   />
+  	  
+  <!-- JFS mailer service --> 
+  <jfs:mailer
+  	  rdf:resource="%server-URL%/mailer"   />   	 
+  
+    <!-- JFS bulk operations service --> 
+  <jfs:bulkOperations
+  	  rdf:resource="%server-URL%/bulk"   />
+  
+  <!-- JFS changes service -->
+  <jfs:changes
+      rdf:resource="%server-URL%/changes" />
+  
+  <!-- Dashboards service (provisional) -->
+  <jdb:dashboards
+  	  rdf:resource="%server-URL%/dashboards" />  	 
+
+  <!-- Widget Catalog -->    
+  <ju:widgetCatalog
+      rdf:resource="%server-URL%/jfs/WidgetCatalog"/>
+  
+  <!-- Web Welcome -->     
+  <jd:infocenterRoot 
+      rdf:resource="%server-URL%/../clmhelp" />
+  
+  <!-- Project areas service. This service is provisional and may change in the next release. -->
+  <jp06:projectAreas
+  	  rdf:resource="%server-URL%/process/project-areas" />
+
+  <!-- Process templates service. This service is provisional and may change in the next release. -->
+  <jp06:processTemplates
+  	  rdf:resource="%server-URL%/process/templates" />
+
+  <!-- Process security service. This service is provisional and may change in the next release. -->
+  <jp06:processSecurity 
+      rdf:resource="%server-URL%/process-security"/>
+    
+  <!-- Process about service. It returns information about process and component versions without 
+       requiring user authentication. See work item 236627 for details-->  
+  <jp06:processAbout
+  	  rdf:resource="%server-URL%/process-about" />
+				
+  <!-- Project Area Management for registered applications. This entry is provisional. -->
+  <jp:manageProjectAreas 
+        rdf:resource="%server-URL%/process/manageProjectAreas"/>
+
+  <!-- Process Template Management for registered applications. This entry is provisional. -->
+  <jp:manageProcessTemplates 
+        rdf:resource="%server-URL%/process/manageProcessTemplates"/>
+
+  <jtp:associations
+      rdf:resource="%server-URL%/process-authoring/associations"/>
+  
+  <jtp:defaultPracticeLibraryUrl
+      rdf:resource="%server-URL%/process-authoring/libraries/shared"/>
+  
+  <jtp:file
+      rdf:resource="%server-URL%/process-authoring/file"/>
+  
+  <jtp:license
+      rdf:resource="%server-URL%/process-authoring/license"/>
+  
+  <jtp:practices
+      rdf:resource="%server-URL%/process-authoring/practices"/>
+  
+  <jtp:processDescriptions
+      rdf:resource="%server-URL%/process-authoring/descriptions"/>
+  
+  <!-- Application about service. -->
+  <oslc:publisher rdf:resource="%server-URL%/application-about"/>	  
+  	  
+  <!-- Server Rename Application Status service -->
+  <jfs:serverRenameStatus
+      rdf:resource="%server-URL%/appServerRenameStatus"/>
+  	  
+</rdf:Description>
