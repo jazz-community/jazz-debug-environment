@@ -62,6 +62,16 @@ public final class FileTools {
     return extractVersion(file);
   }
 
+  public static void copyConfigs(String destination) {
+    String source = "tool/configs/";
+
+    System.out.println(
+        String.format("Copying configuration files from %s to %s", source, destination));
+
+    FileTools.makeDirectory(FileTools.toAbsolute(destination));
+    FileTools.copyAll(source, destination);
+  }
+
   private static File newestFile(String dir) {
     File[] files = getFiles(dir);
 
@@ -153,8 +163,7 @@ public final class FileTools {
   }
 
   public static String folderVersion(String path) {
-    String[] parts = path.split("/");
-    return parts[parts.length - 1];
+    return new File(path).getName();
   }
 
   public static String extractVersion(File file) {

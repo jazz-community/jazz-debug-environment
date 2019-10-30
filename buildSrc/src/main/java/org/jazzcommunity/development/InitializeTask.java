@@ -18,6 +18,24 @@ public class InitializeTask extends DefaultTask {
 
     // 2. Deploy the content of the dropins folder
     // TODO: Document where to find the necessary jar
+    // https://jazz.net/wiki/bin/view/Main/FeatureBasedLaunches
     FileTools.copyAll("jde/dev/dropins", "build/oomph-ide/dropins");
+
+    // 3. If not done yet, extract the configs from the server distribution
+    String scr = "jde/dev/launches/configs/scr.xml";
+    String services = "jde/dev/launches/configs/services.xml";
+    if (!FileTools.exists(scr) && !FileTools.exists(services)) {
+      Zip.extract(
+          FileTools.byVersion("jde/servers", version),
+          FileTools.toAbsolute(scr),
+          "server/conf/ccm/scr.xml");
+      Zip.extract(
+          FileTools.byVersion("jde/servers", version),
+          FileTools.toAbsolute(services),
+          "server/conf/ccm/services.xml");
+    }
+
+    // 4. Copy the custom log4j configuration file
+    FileTools.copyFile("jde/user/log4j/log4j.properties", "jde/dev/launches/configs/");
   }
 }

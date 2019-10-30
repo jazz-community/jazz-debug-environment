@@ -25,11 +25,18 @@ public final class ConfigWriter {
       writeIni(folder);
       System.out.println("Writing dev.properties");
       writeProperties(folder);
+      System.out.println("Copying log4j configuration");
+      copyLogConfig(folder);
       System.out.println("Creating executable files");
       writeExecutables(folder);
     } catch (IOException e) {
       System.out.println(String.format("Runtime configuration failed: %s", e.getMessage()));
     }
+  }
+
+  private static void copyLogConfig(String folder) {
+    String destination = String.format("jde/runtime/%s/conf/", folder);
+    FileTools.copyFile("jde/user/log4j/log4j.properties", destination);
   }
 
   private static void writeExecutables(String folder) throws IOException {

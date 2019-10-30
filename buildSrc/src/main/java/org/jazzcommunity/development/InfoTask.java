@@ -16,6 +16,11 @@ public class InfoTask extends DefaultTask {
    */
   @TaskAction
   public void versions() {
+    if (!FileTools.exists("jde")) {
+      System.out.println(
+          "'jde' folder not found. Run bootstrap to start using the jazz development environment.");
+      return;
+    }
     System.out.println("Available SDK versions:");
     printFiles("jde/sdks");
     System.out.println("Available Servers / JRE versions:");

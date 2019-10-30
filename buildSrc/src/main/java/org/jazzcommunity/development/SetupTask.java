@@ -44,7 +44,7 @@ public class SetupTask extends DefaultTask {
     Zip.extract(
         FileTools.byVersion("jde/sdks", version),
         FileTools.toAbsolute(String.format("jde/runtime/%s/sdk", version)));
-    // 2) extract server
+    // 2) extract jre
     Zip.extract(
         FileTools.byVersion("jde/servers", version),
         FileTools.toAbsolute(String.format("jde/runtime/%s/jre", version)),
@@ -53,22 +53,21 @@ public class SetupTask extends DefaultTask {
     Zip.extract(
         FileTools.byVersion("jde/dbs", version),
         FileTools.toAbsolute(String.format("jde/runtime/%s/db", version)));
-    // 4) copy other necessary static files, probably also needs checks...
-    // I'm still hoping that I can eventually run this stuff without needing the run files...
-    copyConfigs(version);
-    // 5) set executable bit on necessary files
+    // 4) copy version-independent configuration files to the run time
+    String destination = String.format("jde/runtime/%s/conf", version);
+    FileTools.copyConfigs(destination);
+    // 5) extract service configuration from the server distributable
+    Zip.extract(
+        FileTools.byVersion("jde/servers", version),
+        FileTools.toAbsolute(String.format("jde/runtime/%s/conf/scr.xml", version)),
+        "server/conf/ccm/scr.xml");
+    Zip.extract(
+        FileTools.byVersion("jde/servers", version),
+        FileTools.toAbsolute(String.format("jde/runtime/%s/conf/services.xml", version)),
+        "server/conf/ccm/services.xml");
+    // 6) set executable bit on necessary files
     FileTools.setExecutable(
         FileTools.toAbsolute(String.format("jde/runtime/%s/jre/bin/java", version)));
-  }
-
-  private static void copyConfigs(String version) {
-    String source = String.format("tool/configs/%s", version);
-    String target = String.format("jde/runtime/%s/conf", version);
-
-    System.out.println(String.format("Copying configuration files from %s to %s", source, target));
-
-    FileTools.makeDirectory(FileTools.toAbsolute(target));
-    FileTools.copyAll(source, target);
   }
 
   @Option(option = "sdk", description = "Which SDK version to set up. Default is latest.")
