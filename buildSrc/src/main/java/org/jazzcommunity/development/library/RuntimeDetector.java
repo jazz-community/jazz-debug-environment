@@ -16,7 +16,7 @@ public final class RuntimeDetector {
           .getPath();
     }
 
-    String newestSdk = String.format("jde/runtime/%s/sdk", get(project));
+    String newestSdk = String.format("jde/runtime/%s/sdk", get(project).get());
     return FileTools.toAbsolute(newestSdk).getPath();
   }
 

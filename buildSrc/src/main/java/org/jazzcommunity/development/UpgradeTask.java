@@ -16,5 +16,9 @@ public class UpgradeTask extends DefaultTask {
     FileTools.copyAll("tool/db_presets", "jde/dbs");
     FileTools.copyAll("tool/launches", "jde/dev/launches");
     FileTools.copyAll("tool/launches/configs", "jde/dev/launches/configs");
+
+    if (!FileTools.exists("tool/user/eclipse-proxy.ini")) {
+      FileTools.copyFile("tool/templates/eclipse-proxy.ini", "jde/user");
+    }
   }
 }
