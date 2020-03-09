@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
-"jre/bin/java" \
+"{{ executable }}" \
 -Xdebug "-agentlib:jdwp=transport=dt_socket,address=9999,server=y,suspend=n" \
 -Xmx1024M \
--XX:PermSize=64M \
--XX:MaxPermSize=256M \
 "-Dlog4j.configuration=file:conf/log4j.properties" \
 "-Dcom.ibm.team.repository.web.homeuri=http://www.jazz.net" \
 -"Dcom.ibm.team.repository.web.helpuri=http://publib.boulder.ibm.com/infocenter/clmhelp/v4r0/index.jsp" \

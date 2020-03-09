@@ -18,10 +18,14 @@ import org.slf4j.LoggerFactory;
 public final class FileTools {
   private FileTools() {}
 
+  public static void copyAll(File f, File t) {
+    Arrays.stream(Objects.requireNonNull(f.listFiles())).forEach(file -> copyFile(file, t));
+  }
+
   public static void copyAll(String from, String to) {
     File f = toAbsolute(from);
     File t = toAbsolute(to);
-    Arrays.stream(Objects.requireNonNull(f.listFiles())).forEach(file -> copyFile(file, t));
+    copyAll(f, t);
   }
 
   public static void createDirectories(String[] directories) {
@@ -33,12 +37,17 @@ public final class FileTools {
     return file.exists();
   }
 
+  public static boolean isEmpty(String path) {
+    return getFiles(path).length == 0;
+  }
+
   public static File[] getFiles(String path) {
     File file = toAbsolute(path);
     return file.listFiles();
   }
 
   public static File toAbsolute(String dir) {
+    // TODO: This should use Path functionality to build the new file descriptor
     return new File(String.format("%s/%s", System.getProperty("user.dir"), dir));
   }
 
@@ -62,17 +71,7 @@ public final class FileTools {
     return extractVersion(file);
   }
 
-  public static void copyConfigs(String destination) {
-    String source = "tool/configs/";
-
-    System.out.println(
-        String.format("Copying configuration files from %s to %s", source, destination));
-
-    FileTools.makeDirectory(FileTools.toAbsolute(destination));
-    FileTools.copyAll(source, destination);
-  }
-
-  private static File newestFile(String dir) {
+  public static File newestFile(String dir) {
     File[] files = getFiles(dir);
 
     if (files == null) {
@@ -81,6 +80,16 @@ public final class FileTools {
 
     VersionComparator comp = new VersionComparator();
     return Arrays.stream(files).max(comp).get();
+  }
+
+  public static void copyConfigs(String destination) {
+    String source = "tool/configs/";
+
+    System.out.println(
+        String.format("Copying configuration files from %s to %s", source, destination));
+
+    FileTools.makeDirectory(FileTools.toAbsolute(destination));
+    FileTools.copyAll(source, destination);
   }
 
   public static void makeDirectory(File path) {
@@ -113,9 +122,7 @@ public final class FileTools {
     } catch (IOException e) {
       Logger logger = LoggerFactory.getLogger("FileTools.copyFile");
       logger.error(String.format("Failed to copy files: %s", e.getMessage()));
-      if (logger.isTraceEnabled()) {
-        e.printStackTrace();
-      }
+      logger.debug(e.toString());
     }
   }
 
@@ -124,6 +131,10 @@ public final class FileTools {
         String.format(
             "backup/%s_%s.backup",
             from.getName(), new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date()));
+
+    if (!exists("backup")) {
+      createDirectories(new String[] {"backup"});
+    }
 
     try {
       File destination = toAbsolute(name);
@@ -145,9 +156,7 @@ public final class FileTools {
       logger.error(
           String.format(
               "Failed to delete folder %s: %s", folder.getAbsolutePath(), e.getMessage()));
-      if (logger.isTraceEnabled()) {
-        e.printStackTrace();
-      }
+      logger.info(e.toString());
     }
   }
 

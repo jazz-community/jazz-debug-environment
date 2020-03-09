@@ -42,18 +42,20 @@ public final class ConfigWriter {
   private static void writeExecutables(String folder) throws IOException {
     String to = String.format("jde/runtime/%s/", folder);
     Runtime runtime = RuntimeDetector.getRuntime(folder);
-    makeScript("tool/scripts/run_jetty_bash.twig", to + "run_jetty.sh", runtime);
-    makeScript("tool/scripts/run_jetty_powershell.twig", to + "run_jetty.ps1", runtime);
+    String executable = ConfigReader.javaPath();
+    makeScript("tool/scripts/run_jetty_bash.twig", to + "run_jetty.sh", executable, runtime);
+    makeScript("tool/scripts/run_jetty_powershell.twig", to + "run_jetty.ps1", executable, runtime);
     FileTools.setExecutable(String.format("jde/runtime/%s/run_jetty.sh", folder));
   }
 
-  private static void makeScript(String source, String destination, Runtime runtime)
-      throws IOException {
+  private static void makeScript(
+      String source, String destination, String executable, Runtime runtime) throws IOException {
     CharSink out = Files.asCharSink(FileTools.toAbsolute(destination), Charset.forName("UTF-8"));
     List<String> parameters = ConfigReader.runtimeParameters();
     JtwigTemplate template = JtwigTemplate.fileTemplate(FileTools.toAbsolute(source));
     JtwigModel model =
         JtwigModel.newModel()
+            .with("executable", executable)
             .with("launcher", runtime.getLauncherPath())
             .with("parameters", parameters);
     out.write(template.render(model));

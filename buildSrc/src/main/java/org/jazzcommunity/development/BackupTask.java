@@ -20,6 +20,7 @@ public class BackupTask extends DefaultTask {
    */
   @TaskAction
   public void backup() throws IOException {
+    // TODO: Eliminate duplicate code
     if (!FileTools.exists("backup")) {
       FileTools.createDirectories(new String[] {"backup"});
     }

@@ -9,8 +9,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Zip {
+
+  private static final Logger logger = LoggerFactory.getLogger(Zip.class);
 
   /** Largely taken from https://gist.github.com/cassiuscai/cec0c8e418ce265d4227fef56d874aa6 */
   private static final int BUFFER_SIZE = 1 << 12;
@@ -21,7 +25,7 @@ public class Zip {
   }
 
   public static void extract(File from, File to, String subfolder) throws IOException {
-    System.out.println(String.format("Decompress %s to %s", from, to));
+    logger.info(String.format("Decompress %s to %s", from, to));
     Zip.decompress(from, to, subfolder);
   }
 
@@ -67,7 +71,7 @@ public class Zip {
 
   private static void extractFile(InputStream inputStream, File outDir, String name)
       throws IOException {
-    int count = -1;
+    int count;
     byte buffer[] = new byte[BUFFER_SIZE];
     BufferedOutputStream out =
         new BufferedOutputStream(new FileOutputStream(new File(outDir, name)), BUFFER_SIZE);

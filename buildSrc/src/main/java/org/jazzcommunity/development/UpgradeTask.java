@@ -11,14 +11,21 @@ public class UpgradeTask extends DefaultTask {
     // should practically be the bootstrap task, but without overwriting existing user files.
     FileTools.makeDirectory(FileTools.toAbsolute("jde/dev"));
     FileTools.makeDirectory(FileTools.toAbsolute("jde/dev/dropins"));
-    FileTools.makeDirectory(FileTools.toAbsolute("jde/dev/launches"));
-    FileTools.makeDirectory(FileTools.toAbsolute("jde/dev/launches/configs"));
+    FileTools.makeDirectory(FileTools.toAbsolute("jde/dev/projects"));
+    FileTools.makeDirectory(FileTools.toAbsolute("jde/dev/projects/configs"));
+    FileTools.makeDirectory(FileTools.toAbsolute("jde/dev/release"));
+    FileTools.makeDirectory(FileTools.toAbsolute("jde/dev/release/db"));
+    FileTools.makeDirectory(FileTools.toAbsolute("jde/dev/release/config"));
     FileTools.copyAll("tool/db_presets", "jde/dbs");
-    FileTools.copyAll("tool/launches", "jde/dev/launches");
-    FileTools.copyAll("tool/launches/configs", "jde/dev/launches/configs");
+    FileTools.copyAll("tool/projects/launches", "jde/projects/launches");
+    FileTools.copyAll("tool/configs", "jde/dev/projects/configs");
 
     if (!FileTools.exists("tool/user/eclipse-proxy.ini")) {
       FileTools.copyFile("tool/templates/eclipse-proxy.ini", "jde/user");
+    }
+
+    if (!FileTools.exists("tool/user/java_command.cfg")) {
+      FileTools.copyFile("tool/templates/java_command.cfg", "jde/user");
     }
   }
 }

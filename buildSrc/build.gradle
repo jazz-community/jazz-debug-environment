@@ -3,39 +3,26 @@ import com.github.sherter.googlejavaformatgradleplugin.GoogleJavaFormat
 plugins {
     id 'java-gradle-plugin'
     id 'org.openrepose.gradle.plugins.jaxb' version '2.5.0'
-    id 'com.github.sherter.google-java-format' version '0.7.1'
+    id 'com.github.sherter.google-java-format' version '0.8'
 }
 
 dependencies {
-    compile group: 'org.apache.commons', name: 'commons-compress', version: '1.18'
+    api group: 'org.apache.commons', name: 'commons-compress', version: '1.20'
     // this needs to be in here because of a known limitation:
     // https://stackoverflow.com/questions/28229095/apache-commons-compress-using-7zip
-    compile group: 'org.tukaani', name: 'xz', version: '1.8'
-    compile group: 'com.google.guava', name: 'guava', version: '26.0-jre'
-    compile "org.jtwig:jtwig-core:5.87.0.RELEASE"
+    api group: 'org.tukaani', name: 'xz', version: '1.8'
+    api group: 'com.google.guava', name: 'guava', version: '28.2-jre'
+    api "org.jtwig:jtwig-core:5.87.0.RELEASE"
     // jaxb for xsd -> class generation
-    jaxb 'org.glassfish.jaxb:jaxb-xjc:2.2.11'
-    jaxb 'org.glassfish.jaxb:jaxb-runtime:2.2.11'
+    jaxb 'org.glassfish.jaxb:jaxb-xjc:2.3.2'
+//    jaxb 'org.glassfish.jaxb:jaxb-runtime:2.2.11'
     jaxb "org.jvnet.jaxb2_commons:jaxb2-basics:1.11.1"
     jaxb 'org.jvnet.jaxb2_commons:jaxb2-basics-ant:1.11.1'
     jaxb 'org.jvnet.jaxb2_commons:jaxb2-basics-annotate:1.0.4'
     // required as a dependency for avoiding logging erros from jaxb
     jaxb 'org.slf4j:slf4j-log4j12:1.7.25'
     // eclipse plugin
-    compile 'com.diffplug.gradle:goomph:3.17.4'
-    // issues with removed xml namespace
-    // Yes, these have to both be in here! Once for actually using
-    // the generated classes in the build source
-    compile group: 'javax.activation', name: 'activation', version: '1.1.1' 
-    compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.1'
-    compile group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '2.3.1'
-    compile group: 'javax.activation', name: 'javax.activation-api', version: '1.2.0'
-    // and once so that the xjc task can find them on its class path.
-    // haven't found a better way for this
-    jaxb 'javax.activation:activation:1.1.1' 
-    jaxb 'javax.xml.bind:jaxb-api:2.1'
-    jaxb 'org.glassfish.jaxb:jaxb-runtime:2.3.1'
-    jaxb 'javax.activation:javax.activation-api:1.2.0'
+    api 'com.diffplug.gradle:goomph:3.17.4'
 }
 
 repositories {

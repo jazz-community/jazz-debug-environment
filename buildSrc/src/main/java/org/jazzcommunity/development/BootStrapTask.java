@@ -9,8 +9,12 @@ public class BootStrapTask extends DefaultTask {
     "jde",
     "jde/dbs",
     "jde/dev/dropins",
-    "jde/dev/launches",
-    "jde/dev/launches/configs",
+    "jde/dev/projects",
+    "jde/dev/projects/configs",
+    "jde/dev/projects/launches",
+    "jde/dev/projects/tests",
+    "jde/dev/release/config",
+    "jde/dev/release/db",
     "jde/logs",
     "jde/runtime",
     "jde/sdks",
@@ -30,13 +34,15 @@ public class BootStrapTask extends DefaultTask {
 
     FileTools.createDirectories(directories);
     FileTools.copyAll("tool/db_presets", "jde/dbs");
-    FileTools.copyAll("tool/launches", "jde/dev/launches");
-    FileTools.copyAll("tool/configs", "jde/dev/launches/configs");
+    FileTools.copyAll("tool/projects/launches", "jde/dev/projects/launches");
+    FileTools.copyAll("tool/projects/tests", "jde/dev/projects/tests");
+    FileTools.copyAll("tool/configs", "jde/dev/projects/configs");
     FileTools.copyAll("tool/log4j", "jde/user/log4j");
     FileTools.copyFile("tool/templates/run_time_parameters.cfg", "jde/user");
     FileTools.copyFile("tool/templates/linux_terminal_emulator.cfg", "jde/user");
     FileTools.copyFile("tool/templates/jts_locations.cfg", "jde/user/");
     FileTools.copyFile("tool/templates/eclipse-proxy.ini", "jde/user/");
+    FileTools.copyFile("tool/templates/java_command.cfg", "jde/user/");
     FileTools.copyFile("tool/templates/workspaces_template.cfg", "jde/user/workspaces");
   }
 }
