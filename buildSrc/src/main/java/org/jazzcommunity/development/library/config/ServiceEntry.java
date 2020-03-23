@@ -37,7 +37,7 @@ class ServiceEntry implements IniEntry {
     return read(manifest)
         .filter(l -> l.startsWith("Bundle-SymbolicName"))
         .findFirst()
-        .map(line -> String.format("%s=target/classes,target/dependencies", toSymbolicName(line)))
+        .map(line -> String.format("%s=target/classes,target/dependency", toSymbolicName(line)))
         .orElseThrow(
             () ->
                 new RuntimeException(

@@ -24,3 +24,4 @@ backup/
 jazz-debug-environment-2.iml
 *.swp
 buildSrc/out
+logs/

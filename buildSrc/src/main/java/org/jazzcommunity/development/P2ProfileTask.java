@@ -37,7 +37,7 @@ public class P2ProfileTask extends DefaultTask {
       return;
     }
 
-    if (create && !m2.exists()) {
+    if (!m2.exists() || create) {
       m2.createNewFile();
       new SettingsBuilder()
           .addProfiles()
@@ -76,9 +76,7 @@ public class P2ProfileTask extends DefaultTask {
     this.out = out;
   }
 
-  @Option(
-      option = "create",
-      description = "Maven configuration is created if undetected. Default is false")
+  @Option(option = "overwrite", description = "Maven configuration is re-created. Default is false")
   public void setCreate(String create) {
     this.create = Boolean.valueOf(create);
   }

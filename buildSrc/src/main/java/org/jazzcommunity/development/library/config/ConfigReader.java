@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.jazzcommunity.development.library.DetectOperatingSystem;
 import org.jazzcommunity.development.library.FileTools;
 
 public class ConfigReader {
@@ -25,6 +26,13 @@ public class ConfigReader {
         .map(s -> s.trim())
         .map(s -> s.split(" "))
         .orElseGet(() -> new String[] {"gnome-terminal", "--", "./run_jetty.sh"});
+  }
+
+  public static String javaPath() {
+    return filter(readLines(FileTools.toAbsolute("jde/user/java_command.cfg")))
+        .findFirst()
+        .map(s -> s.trim())
+        .orElseGet(() -> defaultJava());
   }
 
   /**
@@ -85,6 +93,18 @@ public class ConfigReader {
           String.format("Error occurred reading configuration files: %s", e.getMessage()));
       return Stream.empty();
     }
+  }
+
+  private static String defaultJava() {
+    if (DetectOperatingSystem.isWindows()) {
+      return "jre\\bin\\java.exe";
+    }
+
+    if (DetectOperatingSystem.isLinux()) {
+      return "jre/bin/java";
+    }
+
+    throw new RuntimeException("Unknown operating system");
   }
 
   // TODO: Make this a predicate for chaining the stream instead of passing the stream

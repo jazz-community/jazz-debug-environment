@@ -41,6 +41,7 @@ public class P2CreationTask extends DefaultTask {
     publisher.metadataRepository(FileTools.toAbsolute(target));
     publisher.publishArtifacts();
 
+    // TODO: I'm afraid that this uses an already existing target... but I'm not sure
     File eclipse = FileTools.toAbsolute("build/oomph-ide/eclipse");
     EclipseRunner nativeRunner = new NativeRunner(eclipse);
     publisher.runUsing(nativeRunner);

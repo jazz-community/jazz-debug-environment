@@ -21,6 +21,8 @@ public class InfoTask extends DefaultTask {
           "'jde' folder not found. Run bootstrap to start using the jazz development environment.");
       return;
     }
+    System.out.println("Configured Java executable:");
+    System.out.println(String.format("\t%s", ConfigReader.javaPath()));
     System.out.println("Available SDK versions:");
     printFiles("jde/sdks");
     System.out.println("Available Servers / JRE versions:");
@@ -31,18 +33,20 @@ public class InfoTask extends DefaultTask {
     printFiles("tool/sdk_files");
     System.out.println("Available P2 Repository URLs:");
     printP2Repos("jde/p2repo");
+    System.out.println("Available drop-ins:");
+    printFiles("jde/dev/dropins");
     System.out.println("Set up run times: ");
     RuntimeDetector.getRuntimes().forEach(System.out::println);
     System.out.println("Available plugins:");
     ConfigReader.userConfiguration().forEach(System.out::println);
   }
 
-  private static void printFiles(String path) {
+  private void printFiles(String path) {
     File directory = FileTools.toAbsolute(path);
     Arrays.stream(directory.listFiles()).forEach(file -> System.out.println("\t" + file.getName()));
   }
 
-  private static void printP2Repos(String path) {
+  private void printP2Repos(String path) {
     File directory = FileTools.toAbsolute(path);
     if (directory.listFiles() != null) {
       Arrays.stream(Objects.requireNonNull(directory.listFiles()))
