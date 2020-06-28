@@ -1,11 +1,13 @@
 import org.jazzcommunity.development.BackupTask
 import org.jazzcommunity.development.BootStrapTask
 import org.jazzcommunity.development.DeploymentTask
+import org.jazzcommunity.development.DownloadTask
 import org.jazzcommunity.development.ReleaseTask
 import org.jazzcommunity.development.InitializeTask
 import org.jazzcommunity.development.P2CreationTask
 import org.jazzcommunity.development.P2ProfileTask
 import org.jazzcommunity.development.RunTask
+import org.jazzcommunity.development.JtsTask
 import org.jazzcommunity.development.SetupTask
 import org.jazzcommunity.development.InfoTask
 import org.jazzcommunity.development.UpgradeTask
@@ -15,13 +17,14 @@ import org.jazzcommunity.development.library.RuntimeDetector
 import org.jazzcommunity.development.library.config.ConfigReader
 
 plugins {
-    id 'java-gradle-plugin'
-    id 'com.diffplug.gradle.equinoxlaunch'
-    id 'com.diffplug.gradle.oomph.ide'
+    id 'java-library'
+    id 'com.diffplug.osgi.equinoxlaunch'
+    id 'com.diffplug.oomph.ide'
+    id 'de.undercouch.download' version '4.0.4'
 }
 
 dependencies {
-    api 'com.diffplug.gradle:goomph:3.21.0'
+    api 'com.diffplug.gradle:goomph:3.22.0'
 }
 
 repositories {
@@ -50,10 +53,7 @@ oomphIde {
 
     pde {
         targetplatform 'ibm-sdk', {
-            it.installation project.hasProperty("sdk")
-                    // TODO: Keep verifying that these work. Seems to be the case so far.
-                    ? FileTools.toAbsolute("jde/runtime/$sdk/sdk").path
-                    : RuntimeDetector.getTargetPlatform(project)
+            it.installation RuntimeDetector.getTargetPlatform(project)
         }
     }
 
@@ -77,6 +77,33 @@ oomphIde {
     }
 }
 
+task initialize(type: InitializeTask) {
+    group = "Jazz Development Environment"
+    description = "Initialize eclipse plugin environment for newest sdk."
+    sdk = ""
+}
+
+// Unpack dropins. This is always done when running ide, even if there aren't any, or they have
+// all been unpacked already
+task unpack(type: Copy) {
+    fileTree(dir: "jde/dropins").include {"*.zip"}.each { zip ->
+        from(zipTree(zip)) {
+            include "**/*.jar"
+            // this will flatten the entire zip file to only leave the jar file in the dropins folder
+            eachFile { file ->
+                file.relativePath = new RelativePath(true, file.name)
+            }
+            includeEmptyDirs false
+        }
+        into "jde/dev/dropins"
+    }
+}
+
+// make sure that unpack is run both when initialize is called on it's own, and also
+// when run as a dependant task
+initialize.dependsOn(unpack)
+ideSetupP2.dependsOn(unpack)
+ideSetupP2.dependsOn(initialize)
 
 // idea taken from https://gitter.im/diffplug/goomph/archives/2017/09/08
 // I might even be able to run the initialize bit here as well?
@@ -87,6 +114,29 @@ ideSetupP2.doLast {
     }
 }
 
+ideClean.doLast {
+    // Always delete the dev folder when cleaning IDE. This will result in initialize running the
+    // next time the ide task is executed.
+    delete 'jde/dev'
+    // Recreate empty projects folder. This is necessary because of some weird behaviour in the ide
+    // task. Folders are checked at the very start of the entire build lifecycle, regardless of
+    // their content. So if project folders exist, they can be filled later on by the dependant
+    // tasks, but they have to exist at the very beginning. This work around makes sure that the
+    // empty folders always exist.
+    mkdir 'jde/dev/projects'
+    mkdir 'jde/dev/projects/launches'
+    mkdir 'jde/dev/projects/tests'
+}
+
+task launches() {
+    doLast {
+        copy {
+            from 'tool/projects/launches'
+            into 'jde/dev/projects/launches'
+        }
+    }
+}
+
 task packageDatabase(type: Zip) {
     from 'jde/dev/db'
     include '**/*'
@@ -94,12 +144,6 @@ task packageDatabase(type: Zip) {
         FileTools.newestVersion('jde/dev/initialize') + '_db.zip' 
     }
     destinationDirectory = file('jde/dev/release/db')
-}
-
-task initialize(type: InitializeTask) {
-    group = "Jazz Development Environment"
-    description = "Initialize eclipse plugin environment for newest sdk."
-    sdk = ""
 }
 
 task release(type: ReleaseTask) {
@@ -124,12 +168,6 @@ task p2use(type: P2ProfileTask) {
     out = "file"
     create = "false"
 }
-
-//// TODO: Planned for a future release
-//task deploy(type: DeploymentTask) {
-//    group = ""
-//    description = ""
-//}
 
 task bootstrap(type: BootStrapTask) {
     group = "Jazz Development Environment"
@@ -160,6 +198,40 @@ task upgrade(type: UpgradeTask) {
     description = "Copies all non-user files after upgrading from an older jazz development environment"
 }
 
+// define custom properties for entire project
+ext {
+    connections = []
+}
+
+task download(type: DownloadTask) {
+    group = "Jazz Development Environment"
+    description = "Automatically download artifacts used for running the jazz development environment. Options: [--sdk=VERSION]"
+    sdk = ""
+    dropins = false
+
+    doLast {
+        def connections = project.getProperties().get("connections")
+        for (def connection  : connections) {
+            download {
+                src connection.getUrl()
+                dest connection.getDestination()
+                header 'Cookie', connection.getCookieHeader()
+            }
+        }
+    }
+}
+
+task jts(type: JtsTask) {
+    group = "Jazz Team Server"
+    description = "Create an integration test environment provisioned with a minimal Jazz Team Server configuration. Options: [--server=VERSION], default=latest"
+    server = ""
+}
+
+task deploy(type: DeploymentTask) {
+    group = "Jazz Team Server"
+    description = "Deploy available plugins to known JTS locations."
+}
+
 allprojects {
     afterEvaluate { project ->
         def runtime = RuntimeDetector.get(project)
@@ -172,11 +244,12 @@ allprojects {
                 // Somehow, the native OperatingSystem interface doesn't work properly yet
                 // It's an incubating feature, so I guess we'll just have to wait.
                 if (DetectOperatingSystem.windows) {
-                    commandLine 'cmd', '/K', 'start', 'powershell', './run_jetty.ps1'
+                    def line = ConfigReader.windowsTerminal()
+                    commandLine line
                 }
 
                 if (DetectOperatingSystem.linux) {
-                    def line = ConfigReader.terminalEmulator()
+                    def line = ConfigReader.linuxTerminal()
                     commandLine line
                 }
             }

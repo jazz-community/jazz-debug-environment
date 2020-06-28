@@ -9,20 +9,10 @@ public final class RuntimeDetector {
   private RuntimeDetector() {}
 
   public static String getTargetPlatform(Project project) {
-    // this is a workaround for running the ide task while initializing an older version than newest
-    // maybe a better idea is just to document properly how to initialize old versions. I'm not yet
-    // sure which way to go with this.
     String initializedVersion = FileTools.newestVersion("jde/dev/initialize");
     if (initializedVersion != null) {
       String path = String.format("jde/dev/initialize/%s/sdk", initializedVersion);
       return FileTools.toAbsolute(path).getAbsolutePath();
-    }
-
-    String newestVersion = FileTools.newestVersion("jde/sdks");
-    // start with "unpacked" parts of the sdk
-    if (FileTools.exists(String.format("jde/dev/initialize/%s", newestVersion))) {
-      return FileTools.toAbsolute(String.format("jde/dev/initialize/%s/sdk", newestVersion))
-          .getPath();
     }
 
     // fall back to default runtime

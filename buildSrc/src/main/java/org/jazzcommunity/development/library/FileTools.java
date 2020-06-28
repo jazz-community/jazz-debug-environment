@@ -16,6 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class FileTools {
+
+  private static final Logger logger = LoggerFactory.getLogger("FileTools");
+
   private FileTools() {}
 
   public static void copyAll(File f, File t) {
@@ -84,10 +87,7 @@ public final class FileTools {
 
   public static void copyConfigs(String destination) {
     String source = "tool/configs/";
-
-    System.out.println(
-        String.format("Copying configuration files from %s to %s", source, destination));
-
+    logger.info("Copying configuration files from {} to {}", source, destination);
     FileTools.makeDirectory(FileTools.toAbsolute(destination));
     FileTools.copyAll(source, destination);
   }
@@ -96,8 +96,10 @@ public final class FileTools {
     try {
       Files.createDirectories(path.toPath());
     } catch (IOException e) {
-      Logger logger = LoggerFactory.getLogger("FileTools.makeDirectory");
-      logger.error(String.format("Could not create %s because %s", path, e.getMessage()));
+      if (logger.isDebugEnabled()) {
+        e.printStackTrace();
+      }
+      logger.error("Could not create {} because {}", path, e.getMessage());
     }
   }
 
@@ -120,9 +122,10 @@ public final class FileTools {
       File destination = new File(to, from.getName());
       Files.copy(from.toPath(), destination.toPath(), StandardCopyOption.REPLACE_EXISTING);
     } catch (IOException e) {
-      Logger logger = LoggerFactory.getLogger("FileTools.copyFile");
-      logger.error(String.format("Failed to copy files: %s", e.getMessage()));
-      logger.debug(e.toString());
+      if (logger.isDebugEnabled()) {
+        e.printStackTrace();
+      }
+      logger.error("Failed to copy files: {}", e.getMessage());
     }
   }
 
@@ -140,11 +143,10 @@ public final class FileTools {
       File destination = toAbsolute(name);
       Files.copy(from.toPath(), destination.toPath(), StandardCopyOption.REPLACE_EXISTING);
     } catch (IOException e) {
-      Logger logger = LoggerFactory.getLogger("FileTools.backupFile");
-      logger.error(String.format("Failed to backup: %s", e.getMessage()));
-      if (logger.isTraceEnabled()) {
+      if (logger.isDebugEnabled()) {
         e.printStackTrace();
       }
+      logger.error("Failed to backup: {}", e.getMessage());
     }
   }
 
@@ -152,11 +154,10 @@ public final class FileTools {
     try {
       MoreFiles.deleteRecursively(folder.toPath(), RecursiveDeleteOption.ALLOW_INSECURE);
     } catch (IOException e) {
-      Logger logger = LoggerFactory.getLogger("FileTools.deleteFolder");
-      logger.error(
-          String.format(
-              "Failed to delete folder %s: %s", folder.getAbsolutePath(), e.getMessage()));
-      logger.info(e.toString());
+      if (logger.isDebugEnabled()) {
+        e.printStackTrace();
+      }
+      logger.error("Failed to delete folder {}: {}", folder.getAbsolutePath(), e.getMessage());
     }
   }
 
@@ -164,8 +165,7 @@ public final class FileTools {
     boolean exists = FileTools.byVersion(dir, version).exists();
 
     if (!exists) {
-      System.out.println(
-          String.format("Missing file for version %s in directory %s", version, dir));
+      logger.error("Missing file for version {} in directory {}", version, dir);
     }
 
     return exists;
@@ -178,7 +178,9 @@ public final class FileTools {
   public static String extractVersion(File file) {
     // TODO: fix these regex, it's pretty much just look that it works so far
     Pattern pattern =
+        // TODO: use lib function to get file ending, and use that for matching
         file.getName().endsWith("zip")
+            // TODO: just take the first number as the start of the version
             ? Pattern.compile("[-_]([0-9].*).zip")
             : Pattern.compile("([0-9].*)$");
     Matcher matcher = pattern.matcher(file.getName());

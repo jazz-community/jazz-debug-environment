@@ -3,16 +3,21 @@ package org.jazzcommunity.development.library.config;
 import com.google.common.io.CharSink;
 import com.google.common.io.Files;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.jazzcommunity.development.library.FileTools;
 import org.jazzcommunity.development.library.Runtime;
 import org.jazzcommunity.development.library.RuntimeDetector;
+import org.jazzcommunity.development.library.config.plugin.IniEntry;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class ConfigWriter {
+  private static final Logger logger = LoggerFactory.getLogger("ConfigWriter");
+
   private ConfigWriter() {}
 
   public static void prepareConfigurations(String runtime) {
@@ -30,7 +35,7 @@ public final class ConfigWriter {
       System.out.println("Creating executable files");
       writeExecutables(folder);
     } catch (IOException e) {
-      System.out.println(String.format("Runtime configuration failed: %s", e.getMessage()));
+      logger.error("Runtime configuration failed: {}", e.getMessage());
     }
   }
 
@@ -50,7 +55,7 @@ public final class ConfigWriter {
 
   private static void makeScript(
       String source, String destination, String executable, Runtime runtime) throws IOException {
-    CharSink out = Files.asCharSink(FileTools.toAbsolute(destination), Charset.forName("UTF-8"));
+    CharSink out = Files.asCharSink(FileTools.toAbsolute(destination), StandardCharsets.UTF_8);
     List<String> parameters = ConfigReader.runtimeParameters();
     JtwigTemplate template = JtwigTemplate.fileTemplate(FileTools.toAbsolute(source));
     JtwigModel model =
@@ -65,7 +70,7 @@ public final class ConfigWriter {
     CharSink file =
         Files.asCharSink(
             FileTools.toAbsolute(String.format("jde/runtime/%s/conf/dev.properties", folder)),
-            Charset.forName("UTF-8"));
+            StandardCharsets.UTF_8);
 
     List<String> properties =
         ConfigReader.userConfiguration()
@@ -83,7 +88,7 @@ public final class ConfigWriter {
     CharSink ini =
         Files.asCharSink(
             FileTools.toAbsolute(String.format("jde/runtime/%s/conf/config.ini", folder)),
-            Charset.forName("UTF-8"));
+            StandardCharsets.UTF_8);
 
     JtwigTemplate template =
         JtwigTemplate.fileTemplate(FileTools.toAbsolute("tool/templates/config.twig"));
@@ -92,7 +97,7 @@ public final class ConfigWriter {
 
     JtwigModel model =
         JtwigModel.newModel()
-            .with("osgiPath", runtime.getOsgi().getName())
+            .with("osgiPath", runtime.getOsgi())
             .with("configurator", runtime.getConfigurator())
             .with("bundles", ConfigReader.sdkFiles(folder).collect(Collectors.toList()))
             .with(
