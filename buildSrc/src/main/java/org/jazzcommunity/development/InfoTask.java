@@ -47,7 +47,8 @@ public class InfoTask extends DefaultTask {
 
   private void printFiles(String path) {
     File directory = FileTools.toAbsolute(path);
-    Arrays.stream(Objects.requireNonNull(directory.listFiles()))
+    File[] files = directory.listFiles() != null ? directory.listFiles() : new File[]{};
+    Arrays.stream(Objects.requireNonNull(files))
         .forEach(file -> System.out.println("\t" + file.getName()));
   }
 
