@@ -1,11 +1,13 @@
 package org.jazzcommunity.development.library;
 
+import org.gradle.internal.os.OperatingSystem;
+
 public class DetectOperatingSystem {
   public static boolean isWindows() {
-    return System.getProperty("os.name").toLowerCase().contains("windows");
+    return OperatingSystem.current().isWindows();
   }
 
   public static boolean isLinux() {
-    return System.getProperty("os.name").toLowerCase().contains("linux");
+    return OperatingSystem.current().isLinux();
   }
 }

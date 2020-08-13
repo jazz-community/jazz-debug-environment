@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.slf4j.Logger;
@@ -19,18 +20,27 @@ public class Zip {
   /** Largely taken from https://gist.github.com/cassiuscai/cec0c8e418ce265d4227fef56d874aa6 */
   private static final int BUFFER_SIZE = 1 << 12;
 
+  public static void extractWithErrorHandling(Path from, Path to) {
+    try {
+      Zip.extract(from.toFile(), to.toFile());
+    } catch (IOException e) {
+      if (logger.isDebugEnabled()) {
+        e.printStackTrace();
+      }
+      e.printStackTrace();
+      logger.error(
+          "Failed to extract '{}' to temporary directory '{}': '{}'", from, to, e.getMessage());
+    }
+  }
+
   // these are just wrappers to enable logging for extracted files
   public static void extract(File from, File to) throws IOException {
     extract(from, to, "");
   }
 
   public static void extract(File from, File to, String subfolder) throws IOException {
-    logger.info(String.format("Decompress %s to %s", from, to));
+    logger.info("Decompress {} to {}", from, to);
     Zip.decompress(from, to, subfolder);
-  }
-
-  public static void decompress(File source, File target) throws IOException {
-    decompress(source, target, "");
   }
 
   // this also needs refactoring badly...
@@ -72,9 +82,10 @@ public class Zip {
   private static void extractFile(InputStream inputStream, File outDir, String name)
       throws IOException {
     int count;
-    byte buffer[] = new byte[BUFFER_SIZE];
+    byte[] buffer = new byte[BUFFER_SIZE];
+    File destination = new File(outDir, name);
     BufferedOutputStream out =
-        new BufferedOutputStream(new FileOutputStream(new File(outDir, name)), BUFFER_SIZE);
+        new BufferedOutputStream(new FileOutputStream(destination), BUFFER_SIZE);
     while ((count = inputStream.read(buffer, 0, BUFFER_SIZE)) != -1) {
       out.write(buffer, 0, count);
     }

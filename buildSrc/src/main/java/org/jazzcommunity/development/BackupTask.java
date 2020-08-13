@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.gradle.api.DefaultTask;
-import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.options.Option;
 import org.jazzcommunity.development.library.FileTools;
@@ -13,14 +12,15 @@ import org.jazzcommunity.development.library.zip.SevenZip;
 public class BackupTask extends DefaultTask {
   private String mode;
 
-  private static String[] SLIM_FILTER = {"sdks", "servers", "sdk", "jre", "p2repo"};
+  private static final String[] SLIM_FILTER = {
+    "sdks", "servers", "sdk", "jre", "p2repo", "dev", "integration", "logs", "dbs"
+  };
 
   /**
    * Create a zip file of the complete jde folder, either for backing up or giving to someone else
    */
   @TaskAction
   public void backup() throws IOException {
-    // TODO: Eliminate duplicate code
     if (!FileTools.exists("backup")) {
       FileTools.createDirectories(new String[] {"backup"});
     }
@@ -49,11 +49,6 @@ public class BackupTask extends DefaultTask {
         System.out.println("No backup option selected, aborting.");
         break;
     }
-  }
-
-  @Input
-  public String getMode() {
-    return mode;
   }
 
   @Option(option = "mode", description = "Sets which backup mode to use.")

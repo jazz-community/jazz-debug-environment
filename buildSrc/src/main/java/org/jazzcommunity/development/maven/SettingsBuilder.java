@@ -50,11 +50,7 @@ public class SettingsBuilder {
     settings = factory.createSettings(payload.getValue());
   }
 
-  /**
-   * This kind of breaks encapsulation, but I'm just going to keep this for a bit
-   *
-   * @return
-   */
+  // This kind of breaks encapsulation, but I'm just going to keep this for a bit
   public SettingsBuilder addAllRepositories() {
     Settings value = settings.getValue();
 

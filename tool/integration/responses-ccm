@@ -1,0 +1,7 @@
+data.warehouse.page\:db.vendor=derby_net
+configure.database.page\:db.type=JDBC
+configure.database.page\:db.vendor=DERBY
+data.warehouse.page\:db.type=JDBC
+configure.database.page\:db.jdbc.location=conf/ccm/derby/repositoryDB
+data.warehouse.page\:db.jdbc.password=
+data.warehouse.page\:db.jdbc.location=//localhost\:1527/conf/jts/derby/warehouseDB

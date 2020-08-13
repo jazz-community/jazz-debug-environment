@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class P2ProfileTask extends DefaultTask {
-
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
   private String sdk;
   private String out;
   private boolean create;
@@ -28,12 +28,9 @@ public class P2ProfileTask extends DefaultTask {
     File m2 = new File(String.format("%s/.m2/settings.xml", System.getProperty("user.home")));
 
     if (create && m2.exists()) {
-      Logger logger = LoggerFactory.getLogger(this.getClass().getName());
-      String message =
-          String.format(
-              "A maven settings file already exists in %s. Use the --sdk option to manage active profiles.",
-              System.getProperty("user.home"));
-      logger.error(message);
+      logger.error(
+          "A maven settings file already exists in {}. Use the --sdk option to manage active profiles.",
+          System.getProperty("user.home"));
       return;
     }
 
@@ -78,6 +75,6 @@ public class P2ProfileTask extends DefaultTask {
 
   @Option(option = "overwrite", description = "Maven configuration is re-created. Default is false")
   public void setCreate(String create) {
-    this.create = Boolean.valueOf(create);
+    this.create = Boolean.parseBoolean(create);
   }
 }

@@ -25,50 +25,34 @@ public class InitializeTask extends DefaultTask {
 
   @TaskAction
   public void initializeNewVersion() throws Exception {
-    // 1. Extract the newest sdk
-    String version = sdk.isEmpty() ? FileTools.newestVersion("jde/sdks") : sdk;
-    String sdkTarget = String.format("jde/dev/initialize/%s/sdk", version);
-
-    if (!FileTools.exists(sdkTarget) || FileTools.isEmpty(sdkTarget)) {
-      Zip.extract(FileTools.byVersion("jde/sdks", version), FileTools.toAbsolute(sdkTarget));
+    // 0 Only continue if there isn't already a target workspace available
+    if (FileTools.exists("jde/dev/initialize") && !FileTools.isEmpty("jde/dev/initialize")) {
+      String initialized = FileTools.newestVersion("jde/dev/initialize");
+      System.out.println(
+          String.format(
+              "Version %s previously initialized. Skipping initialize task. If you wish to initialize a different version, run ideClean and initialize.",
+              initialized));
+      return;
     }
 
-    // 2. create the project files for the extracted projects so that it can be imported
-    logger.info("Copy project files");
-    File project = FileTools.toAbsolute("tool/projects/tests");
-    File destination = FileTools.toAbsolute("jde/dev/projects/tests");
-    Files.walk(project.toPath())
-        .forEach(f -> copy(f, destination.toPath().resolve(project.toPath().relativize(f))));
+    // 1. Create directory structure and copy development files. (previously part of bootstrap task)
+    logger.info("Create directories");
+    FileTools.createDirectories(
+        new String[] {
+          "jde/dev/dropins",
+          "jde/dev/projects",
+          "jde/dev/projects/configs",
+          "jde/dev/projects/launches",
+          "jde/dev/projects/tests",
+          "jde/dev/release/config",
+          "jde/dev/release/db"
+        });
 
-    // 3. create proper test project structure
-    Files.walk(Paths.get(FileTools.toAbsolute("jde/dev/initialize").getAbsolutePath()))
-        .filter(InitializeTask::filterTestProject)
-        .forEach(
-            z -> {
-              Path d = Paths.get(FileTools.toAbsolute("jde/dev/projects/tests").getAbsolutePath());
-              // copy the entire project
-              try {
-                logger.info("Copy source project");
-                // TODO: skip 1 because the root folder already exists. Should find a prettier
-                // solution to this
-                Files.walk(z).skip(1).forEach(path -> copy(path, d.resolve(z.relativize(path))));
-              } catch (IOException e) {
-                logger.warn(e.toString());
-              }
-              // extract project source
-              Path zip = Paths.get(z.toAbsolutePath().toString(), "src.zip");
-              try {
-                logger.info("Unpack source ");
-                Zip.extract(
-                    zip.toAbsolutePath().toFile(),
-                    FileTools.toAbsolute("jde/dev/projects/tests/src"));
-              } catch (Exception e) {
-                logger.warn(e.toString());
-              }
-            });
+    FileTools.copyAll("tool/projects/launches", "jde/dev/projects/launches");
+    FileTools.copyAll("tool/projects/tests", "jde/dev/projects/tests");
+    FileTools.copyAll("tool/configs", "jde/dev/projects/configs");
 
-    // TODO: Document where to find the necessary jar
-    // 4. Check if dropins have been provided
+    // 2. Check if dropins have been provided from
     // https://jazz.net/wiki/bin/view/Main/FeatureBasedLaunches
     if (FileTools.isEmpty("jde/dev/dropins")) {
       logger.error(
@@ -76,10 +60,32 @@ public class InitializeTask extends DefaultTask {
               + "You will not be able to run the custom launches. "
               + "See documentation for details. "
               + "Exiting.");
-      return;
+      throw new RuntimeException("Dropins missing!");
     }
 
-    // 5. If not done yet, extract the configs from the server distribution
+    // 3. Extract the newest sdk
+    logger.info("Extract sdk");
+    String version = sdk.isEmpty() ? FileTools.newestVersion("jde/sdks") : sdk;
+    String sdkTarget = String.format("jde/dev/initialize/%s/sdk", version);
+
+    if (!FileTools.exists(sdkTarget) || FileTools.isEmpty(sdkTarget)) {
+      Zip.extract(FileTools.byVersion("jde/sdks", version), FileTools.toAbsolute(sdkTarget));
+    }
+
+    // 4. create the project files for the extracted projects so that it can be imported
+    logger.info("Copy project files");
+    File project = FileTools.toAbsolute("tool/projects/tests");
+    File destination = FileTools.toAbsolute("jde/dev/projects/tests");
+    Files.walk(project.toPath())
+        .forEach(f -> copy(f, destination.toPath().resolve(project.toPath().relativize(f))));
+
+    // 5. create proper test project structure
+    Files.walk(Paths.get(FileTools.toAbsolute("jde/dev/initialize").getAbsolutePath()))
+        .filter(InitializeTask::filterTestProject)
+        .forEach(this::unpackProject);
+
+    // 6. If not done yet, extract the configs from the server distribution
+    logger.info("Extract server configuration");
     String scr = "jde/dev/projects/configs/scr.xml";
     String services = "jde/dev/projects/configs/services.xml";
     if (!FileTools.exists(scr) && !FileTools.exists(services)) {
@@ -93,8 +99,31 @@ public class InitializeTask extends DefaultTask {
           "server/conf/ccm/services.xml");
     }
 
-    // 6. Copy the custom log4j configuration file
+    // 7. Copy the custom log4j configuration file
+    logger.info("Copy log4j configuration");
     FileTools.copyFile("jde/user/log4j/log4j.properties", "jde/dev/projects/configs/");
+  }
+
+  private void unpackProject(Path testProject) {
+    Path sink = Paths.get(FileTools.toAbsolute("jde/dev/projects/tests").getAbsolutePath());
+    // copy the entire project
+    try {
+      logger.info("Copy source project");
+      Files.walk(testProject)
+          .skip(1)
+          .forEach(path -> copy(path, sink.resolve(testProject.relativize(path))));
+    } catch (IOException e) {
+      logger.warn(e.toString());
+    }
+    // extract project source
+    Path zip = Paths.get(testProject.toAbsolutePath().toString(), "src.zip");
+    try {
+      logger.info("Unpack source ");
+      Zip.extract(
+          zip.toAbsolutePath().toFile(), FileTools.toAbsolute("jde/dev/projects/tests/src"));
+    } catch (Exception e) {
+      logger.warn(e.toString());
+    }
   }
 
   private static boolean filterTestProject(Path p) {
@@ -104,10 +133,13 @@ public class InitializeTask extends DefaultTask {
 
   private void copy(Path from, Path to) {
     try {
-      logger.debug(String.format("Copying from %s to %s", from, to));
+      logger.info("Copying from {} to {}", from, to);
       Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
     } catch (IOException e) {
-      logger.warn(e.toString());
+      if (logger.isDebugEnabled()) {
+        e.printStackTrace();
+      }
+      logger.info(e.toString());
     }
   }
 }

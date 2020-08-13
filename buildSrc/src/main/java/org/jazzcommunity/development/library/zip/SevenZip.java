@@ -10,6 +10,8 @@ import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
 import org.jazzcommunity.development.library.FileTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is modelled after
@@ -17,6 +19,7 @@ import org.jazzcommunity.development.library.FileTools;
  */
 public class SevenZip {
 
+  private static final Logger logger = LoggerFactory.getLogger("SevenZip");
   private static final int BUFFER_SIZE = 1 << 10;
 
   private SevenZip() {}
@@ -84,11 +87,14 @@ public class SevenZip {
       } else {
         // this could also occur when the file content is something weird, I guess a symlink
         // would mess this up, for example.
-        System.out.println(String.format("Skipped %s because of backup mode", file.getName()));
+        logger.info("Skipped {} because of backup mode", file.getName());
       }
     } catch (Exception e) {
       // not sure yet how and where to handle these properly
-      e.printStackTrace();
+      if (logger.isDebugEnabled()) {
+        e.printStackTrace();
+      }
+      logger.error("Error while archiving: {}", e.getMessage());
     }
   }
 }

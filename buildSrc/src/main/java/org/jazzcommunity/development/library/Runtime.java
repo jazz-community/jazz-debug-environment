@@ -1,65 +1,37 @@
 package org.jazzcommunity.development.library;
 
 import java.io.File;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-/**
- * Data class representing a run time configuration. This might include other functionality later
- * on, such as including other user configuration.
- *
- * <p>TODO: Improve error handling & logging...
- */
 public class Runtime {
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   private final File folder;
   private final String version;
-  private final File osgi;
-  private final File configurator;
-  private final File launcher;
+  private final SdkConfiguration configuration;
 
   public Runtime(File folder) {
     this.folder = folder;
     this.version = folder.getName();
-    // TODO: This is certainly not the best way to deal with these configurations...
-    this.osgi =
-        new File(String.format("jde/runtime/%s/sdk/plugins", version))
-            .listFiles((file, s) -> s.startsWith("org.eclipse.osgi_") && !s.contains("R"))[0];
-    this.configurator =
-        new File(String.format("jde/runtime/%s/sdk/plugins", version))
-            .listFiles(
-                (file, s) ->
-                    s.startsWith("org.eclipse.equinox.simpleconfigurator_") && !s.contains("R"))[0];
-    this.launcher =
-        new File(String.format("jde/runtime/%s/sdk/plugins", version))
-            .listFiles(
-                (file, s) -> s.startsWith("org.eclipse.equinox.launcher_") && !s.contains("R"))[0];
-  }
-
-  public File getFolder() {
-    return folder;
+    String path = String.format("tool/sdk_files/sdk_config_%s.cfg", version);
+    configuration = SdkConfiguration.fromFile(new File(path));
   }
 
   public String getVersion() {
     return version;
   }
 
-  public File getOsgi() {
-    return osgi;
-  }
-
-  public String getOsgiPath() {
-    return String.format("sdk/plugins/%s", osgi.getName());
+  public String getOsgi() {
+    return configuration.getOsgi();
   }
 
   public String getConfigurator() {
-    return configurator.getName();
-  }
-
-  public File getLauncher() {
-    return launcher;
+    return configuration.getConfigurator();
   }
 
   public String getLauncherPath() {
-    return String.format("sdk/plugins/%s", launcher.getName());
+    return String.format("sdk/plugins/%s", configuration.getLauncher());
   }
 
   @Override
@@ -72,7 +44,7 @@ public class Runtime {
         + folder
         + ",\n"
         + "\t\tosgi = "
-        + getOsgiPath()
+        + configuration.getOsgi()
         + ",\n"
         + "\t\tconfigurator = "
         + getConfigurator()
